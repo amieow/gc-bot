@@ -1,17 +1,17 @@
 import { Server } from "socket.io";
 
 export const socketInit = (server: any) => {
-  const io = new Server(server);
+	const io = new Server(server);
 
-  io.on("connection", (socket) => {
-    console.log("a user connected to socket");
+	io.on("connection", (socket) => {
+		console.log("a user connected to socket");
 
-    io.emit("qr", "");
+		io.emit("qr", "");
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
-    });
-  });
+		socket.on("disconnect", () => {
+			console.log("user disconnected");
+		});
+	});
 
-  return io;
+	return io;
 };

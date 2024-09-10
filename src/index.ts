@@ -5,30 +5,32 @@ import path from "path";
 import "./app/bot";
 import { socketInit } from "./utils/socket";
 import bot from "./app/bot";
+import { connectToDatabase } from "./app/mongodb";
 
 export const app = express();
 const server = createServer(app);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3111;
 
 export const io = socketInit(server);
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./index.html"));
+	res.sendFile(path.join(__dirname, "./index.html"));
 });
 
 app.get("/send", (req, res) => {
-  const phone = req.query.phone;
-  const text = req.query.text;
+	const phone = req.query.phone;
+	const text = req.query.text;
 
-  bot.sendMessage(phone + "@c.us", text!.toString());
+	bot.sendMessage(phone + "@c.us", text!.toString());
 
-  res.json({
-    success: true,
-    message: "pesan berhasil terkirim",
-    text,
-  });
+	res.json({
+		success: true,
+		message: "pesan berhasil terkirim",
+		text,
+	});
 });
 
+connectToDatabase();
 server.listen(port, () => {
-  console.log("Socket running on port " + port);
+	console.log("Socket running on port " + port);
 });
