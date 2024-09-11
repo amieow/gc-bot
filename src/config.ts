@@ -29,7 +29,7 @@ let CONFIG = {
 
 	// URL untuk koneksi ke database MongoDB yang digunakan oleh bot ini.
 	MONGODB_URL:
-		"mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.0",
+		"mongodb+srv://amieow:Mkaa6GPjMKYrT7OY@wabot.jrdvs.mongodb.net/?retryWrites=true&w=majority&appName=wabot",
 
 	// Pengaturan pengingat otomatis untuk mengingatkan jadwal di hari berikutnya.
 	remainder: {

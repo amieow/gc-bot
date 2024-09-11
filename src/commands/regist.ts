@@ -4,10 +4,10 @@ import { dbuser } from "../app/mongodb";
 import User from "../models/user";
 export const description = "show pr";
 export const usage = "regist <nama panggilan> <absen>";
-export const example = "/regist FFFFF 1";
+export const example = "/regist kucing 99";
 export default handleCommand(async (chat, msg, from) => {
-	if (!/[a-zA-Z] [0-9]/.test(chat)) {
-		throw Error(`Wrong format,cth : ${example}`);
+	if (!/^[A-Za-z]+\s\d+$/.test(chat)) {
+		await msg.reply(`Wrong format,cth : ${example}`);
 	}
 	await loading(msg, async () => {
 		const [namaPanggilan, absen] = chat.split(" ");
