@@ -2,8 +2,10 @@ import bot from "../app/bot";
 import { delay, handleCommand, loading } from "../app/helpers";
 import { CONFIG } from "../config";
 
-export const description = "jadwal kelas 12-7";
-export const usage = "ai <prompt>";
+export const description = "kalau ada pertanyaan kasih saja";
+export const usage = "ai <pertanyaan>";
+
+export const tags = ["ai"];
 export const example = `*${CONFIG.prefix}ai apa itu kucing*`;
 export default handleCommand(async (chat, msg) => {
 	// await msg.react("🔄");

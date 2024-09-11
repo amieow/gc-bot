@@ -3,9 +3,17 @@ import mongoose from "mongoose";
 import { CONFIG } from "../config";
 import { T_User } from "../types/user";
 import User from "../models/user";
+import { games } from "../models/game";
 let dbuser: {
 	[key: string]: T_User;
 } = {};
+
+let dbgroup: {
+	[key: string]: games;
+} = {};
+for (const a in CONFIG.GROUP_WHITELIST) {
+	dbgroup[CONFIG.GROUP_WHITELIST[a]] = {};
+}
 // const uri = "your-mongodb-connection-string";
 const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
@@ -44,4 +52,4 @@ process.on("SIGINT", async () => {
 	process.exit(0);
 });
 
-export { connectToDatabase, closeConnection, dbuser };
+export { connectToDatabase, closeConnection, dbuser, dbgroup };

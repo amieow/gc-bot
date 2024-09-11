@@ -3,6 +3,7 @@ import { handleCommand } from "../app/helpers";
 
 export const description = "display all the member or contacts";
 export const usage = "p";
+export const tags = ["hidden"];
 
 export default handleCommand(async (chat, msg) => {
 	const a = await msg.getChat();

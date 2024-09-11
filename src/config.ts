@@ -7,7 +7,7 @@ let CONFIG = {
 		"5947+R2V, Tarudan, Bangunharjo, Kec. Sewon, Kabupaten Bantul, Daerah Istimewa Yogyakarta 55188",
 
 	// Daftar nomor kontak yang memiliki hak akses sebagai moderator (mod).
-	mods: ["6285870650187@c.us"],
+	mods: "6285870650187@c.us",
 
 	// Daftar nomor kontak yang memiliki hak akses sebagai admin.
 	admin: ["6285870650187@c.us"],

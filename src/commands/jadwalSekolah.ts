@@ -7,7 +7,7 @@ export const description = "jadwal kelas 12-7";
 export const usage = "jadwal";
 
 function decideDays(date: number): string {
-	const now = new Date(date * 1000); // Mengkonversi timestamp dari detik ke milidetik
+	const now = new Date(date); // Mengkonversi timestamp dari detik ke milidetik
 	const daysOfWeek = [
 		"senin",
 		"selasa",
@@ -41,7 +41,7 @@ function readFileContent(fileName: string) {
 	const filePath = path.join(__dirname, "..", "jadwal", `${fileName}.txt`);
 	try {
 		const data = readFileSync(filePath, "utf8");
-		console.log("File content:", data);
+		// console.log("File content:", data);
 		return data;
 	} catch (error) {
 		console.error("Error reading file:", error);

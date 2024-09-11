@@ -3,8 +3,11 @@ import bot from "../app/bot";
 import { handleCommand, loading } from "../app/helpers";
 import { CONFIG } from "../config";
 
-export const description = "jadwal kelas 12-7";
-export const usage = "aigambar <prompt>";
+export const description =
+	"Membuat gambar berdasarkan deskripsi yang diberikan.";
+export const usage = "aigambar <deskripsi>";
+
+export const tags = ["ai"];
 export const example = `*${CONFIG.prefix}aigambar keluarga kucing sedang makan bersama*`;
 export default handleCommand(async (chat, msg) => {
 	// const cht = await msg.reply("Wait...");

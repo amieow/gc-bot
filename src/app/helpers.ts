@@ -50,14 +50,15 @@ export function scheduleMessage(time: string, chatId: string, message: string) {
 export async function msgLogger(from: SENDER_T, message: Message) {
 	// const chalk = (await import("chalk")).default;
 	// const splt = message.id.remote.split("-");
+	const msg = message.body || (message.isGif ? "Sent a gif*" : "");
 	if (from.group) {
 		console.log(
 			`${bgCyan(`[${from.group}]`)}${bgGreen(`[${from.contact}]`)} : ${red(
-				message.body,
+				msg,
 			)}`,
 		);
 	} else {
-		console.log(`${bgGreen(`[${from.contact}]`)} : ${red(message.body)}`);
+		console.log(`${bgGreen(`[${from.contact}]`)} : ${red(msg)}`);
 	}
 	// console.log(message);
 }

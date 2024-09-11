@@ -6,6 +6,7 @@ const userSchema = new Schema({
 	limitAiImg: { type: Number, required: false },
 	absen: { type: Number, required: true },
 	role: { type: String, required: false },
+	poin: { type: Number, required: false },
 });
 interface IUser extends Document {
 	name: string;
@@ -13,6 +14,7 @@ interface IUser extends Document {
 	limitAiImg: number;
 	absen: number;
 	role?: string;
+	poin?: number;
 }
 
 const User = mongoose.model<IUser>("user", userSchema);
