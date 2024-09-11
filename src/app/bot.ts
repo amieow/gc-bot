@@ -8,8 +8,9 @@ import onDisconnected from "../events/disconnected";
 import { CONFIG } from "../config";
 import { delay, msgLogger } from "./helpers";
 import SENDER_T from "../types/sender";
-import { closeConnection } from "./mongodb";
+import { closeConnection, dbuser } from "./mongodb";
 import { onDayChange } from "../events/daychange";
+import { example } from "../commands/regist";
 
 const bot = new Client({
 	authStrategy: new LocalAuth(),
@@ -37,7 +38,7 @@ const commandFiles = fs
 console.log(commandFiles);
 const commands: {
 	[key: string]: {
-		fn: (command: string[], message: Message, from: SENDER_T) => void;
+		fn: (command: string, message: Message, from: SENDER_T) => void;
 		description: string;
 		usage: string;
 		tags?: string;
@@ -91,10 +92,19 @@ bot.on("message", async (message: Message) => {
 		msgLogger(from, message);
 		if (msgContent.startsWith(CONFIG.prefix)) {
 			const [commandName, ...args] = msgContent.slice(1).split(" ");
-
+			console.log(commandName);
+			if (
+				!(dbuser && dbuser.hasOwnProperty(from.contact)) &&
+				commandName != "regist"
+			) {
+				await message.reply(
+					`whoops anda harus regist dulu untuk memakai bot\ncontoh : ${example}`,
+				);
+				return;
+			}
 			if (commands[commandName]) {
 				await delay(1000);
-				commands[commandName].fn(args, message, from);
+				commands[commandName].fn(args.join(" "), message, from);
 			} else {
 				await message.reply("Command not recognized.");
 			}

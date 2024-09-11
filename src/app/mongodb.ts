@@ -5,12 +5,12 @@ import { T_User } from "../types/user";
 import User from "../models/user";
 let dbuser: {
 	[key: string]: T_User;
-};
+} = {};
 // const uri = "your-mongodb-connection-string";
-
+const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
 	try {
-		await mongoose.connect(CONFIG.MONGODB_URL, {});
+		await mongoose.connect(url, {});
 		console.log("Connected to MongoDB");
 		const user = await User.find();
 		if (user) {

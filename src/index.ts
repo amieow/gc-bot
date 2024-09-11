@@ -1,7 +1,9 @@
 import { createServer } from "http";
 import express from "express";
 import path from "path";
-
+import * as dotenv from "dotenv";
+dotenv.config();
+// console.log("MONGODB_URL:", process.env.MONGODB_URL);
 import "./app/bot";
 import { socketInit } from "./utils/socket";
 import bot from "./app/bot";
