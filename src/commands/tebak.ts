@@ -1,3 +1,4 @@
+import { addToQueue } from "../app/bot";
 import { handleCommand } from "../app/helpers";
 import { dbgroup, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
@@ -30,7 +31,7 @@ export default handleCommand(async (chat, msg, from) => {
 					`*Tebakan benar*\n+10 poin ${dbuser[from.contact].name}`,
 				);
 				if ((dbgroup[from.group].playestime as number) >= 5) {
-					tebakKata(chat, msg, from);
+					addToQueue(async () => tebakKata(chat, msg, from));
 				} else {
 					dbgroup[from.group].playestime = 0;
 				}
