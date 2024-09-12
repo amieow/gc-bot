@@ -1,27 +1,30 @@
 import { CONFIG } from "../config";
-import { handleCommand } from "../app/helpers";
+import { generateID, handleCommand, loading } from "../app/helpers";
 import PR from "../models/pr";
 
 export const description = "menu kelas";
 export const usage = "pr+ <description>";
 export const example = `${CONFIG.prefix}pr+ matematika hal 69`;
 export default handleCommand(async (chat, msg, from) => {
-	if (CONFIG.sekretaris.includes(from.contact)) {
+	if (from.role && from.role == "sekretaris") {
 		if (!chat) {
 			await msg.reply(`Wrong Format: ${usage}`);
 			return;
 		}
-		try {
-			const newPR = await PR.create({ description: chat });
-			await msg.reply(`PR berhasil dibuat. ID: ${newPR.id}`);
-		} catch (error) {
-			if (error instanceof Error) {
-				await msg.reply("Error : " + error.message);
-			} else {
-				await msg.reply("An unknown error occurred");
-				console.log(error);
-			}
-		}
+		await loading(msg, async () => {
+			const newId = generateID(4);
+			await PR.updateOne(
+				{ remote: from.group }, // Filter by the remote field
+				{
+					$push: {
+						pr: {
+							description: chat,
+							id: newId,
+						},
+					},
+				}, // Push the new PR item into the array
+			);
+		});
 	} else {
 		await msg.reply("Anda bukan sekretaris");
 		return;

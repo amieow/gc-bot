@@ -1,10 +1,8 @@
 let CONFIG = {
 	// Prefix yang digunakan untuk menandai bahwa sebuah pesan adalah perintah.
 	prefix: "/",
-
-	// Alamat lokasi boleh di sewon atau jogja saja
-	ADDRESS:
-		"5947+R2V, Tarudan, Bangunharjo, Kec. Sewon, Kabupaten Bantul, Daerah Istimewa Yogyakarta 55188",
+	city: "Yogyakarta",
+	country: "IDN",
 
 	// Daftar nomor kontak yang memiliki hak akses sebagai moderator (mod).
 	mods: "6285870650187@c.us",
@@ -12,17 +10,11 @@ let CONFIG = {
 	// Daftar nomor kontak yang memiliki hak akses sebagai admin.
 	admin: ["6285870650187@c.us"],
 
-	// Daftar nomor kontak yang memiliki hak akses sebagai bendahara (biasanya untuk urusan keuangan).
-	bendahara: ["62895355877890@c.us", "6281575597422@c.us"],
+	// // Daftar nomor kontak yang memiliki hak akses sebagai bendahara (biasanya untuk urusan keuangan).
+	// bendahara: ["62895355877890@c.us", "6281575597422@c.us"],
 
-	// Daftar nomor kontak yang memiliki hak akses sebagai sekretaris.
-	sekretaris: ["6281575597422@c.us"],
-
-	// Daftar grup WhatsApp yang diizinkan menggunakan bot ini (hanya grup yang ada di daftar ini yang bisa mengakses bot).
-	GROUP_WHITELIST: [
-		"120363160454225256@g.us", // grup utama
-		"120363305092880539@g.us",
-	],
+	// // Daftar nomor kontak yang memiliki hak akses sebagai sekretaris.
+	// sekretaris: ["6281575597422@c.us"],
 
 	// Daftar nomor kontak individu yang diizinkan menggunakan bot ini (hanya kontak yang ada di daftar ini yang bisa mengakses bot).
 	CONTACT_WHITELIST: ["6285179772608@c.us", "6281575597422@c.us"],

@@ -4,6 +4,7 @@ import SENDER_T from "../types/sender";
 import { red, bgCyan, bgGreen } from "colorette";
 import schedule from "node-schedule";
 import bot from "./bot";
+import shortUUID from "short-uuid";
 // import { promises as fs } from "fs";
 // const chalk = require("chalk");
 
@@ -12,6 +13,24 @@ export const handleCommand = (
 ) => {
 	return (command: string, message: Message, from: SENDER_T) =>
 		listener(command, message, from);
+};
+
+export const formatDate = (time: number): string => {
+	const now = new Date();
+
+	// Opsi untuk format tanggal
+	const options: Intl.DateTimeFormatOptions = {
+		weekday: "long", // Hari (Senin, Selasa, dll.)
+		year: "numeric", // Tahun
+		month: "long", // Bulan dalam bentuk teks (Januari, Februari, dll.)
+		day: "numeric", // Tanggal
+		hour: "numeric", // Jam
+		minute: "numeric", // Menit
+		second: "numeric", // Detik
+	};
+
+	// Mengeluarkan tanggal dengan format: Senin, 11 September 2024, 13:45:30
+	return now.toLocaleString("id-ID", options);
 };
 
 export async function loading(msg: Message, process: () => Promise<void>) {
@@ -33,7 +52,15 @@ export async function loading(msg: Message, process: () => Promise<void>) {
 		}
 	}
 }
+import { randomBytes } from "crypto";
 
+export function generateID(length: number): string {
+	const characters = "abcdefghijklmnopqrstuvwxyz";
+	const bytes = randomBytes(length);
+	return [...bytes]
+		.map((byte) => characters[byte % characters.length])
+		.join("");
+}
 export function delay(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }

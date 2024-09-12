@@ -7,7 +7,6 @@ dotenv.config();
 import "./app/bot";
 import { socketInit } from "./utils/socket";
 import bot from "./app/bot";
-import { connectToDatabase } from "./app/mongodb";
 
 export const app = express();
 const server = createServer(app);
@@ -32,7 +31,6 @@ app.get("/send", (req, res) => {
 	});
 });
 
-connectToDatabase();
 server.listen(port, () => {
 	console.log("Socket running on port " + port);
 });

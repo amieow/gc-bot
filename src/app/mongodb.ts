@@ -4,16 +4,21 @@ import { CONFIG } from "../config";
 import { T_User } from "../types/user";
 import User from "../models/user";
 import { games } from "../models/game";
+import Group from "../models/group";
+import { T_GROUP } from "../types/group";
 let dbuser: {
 	[key: string]: T_User;
 } = {};
 
 let dbgroup: {
-	[key: string]: games;
+	[key: string]: games & T_GROUP;
 } = {};
-for (const a in CONFIG.GROUP_WHITELIST) {
-	dbgroup[CONFIG.GROUP_WHITELIST[a]] = {};
-}
+let dbsekretaris: {
+	[name: string]: { remote: string };
+} = {};
+let dbbendahara: {
+	[name: string]: { remote: string };
+} = {};
 // const uri = "your-mongodb-connection-string";
 const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
@@ -26,10 +31,32 @@ async function connectToDatabase() {
 				dbuser[user.cp] = {
 					name: user.name,
 					absen: user.absen,
-					role: user.role,
+					kelas: user.kelas,
 				};
 			});
-			console.log("Successfully restore client data");
+			console.log("Successfully restore user data");
+		}
+		const group = await Group.find();
+		if (group) {
+			// console.log(group);
+			group.forEach((grup) => {
+				grup.sekretaris.forEach((num) => {
+					dbsekretaris[num] = { remote: grup.remote };
+				});
+				grup.bendahara.forEach((num) => {
+					dbbendahara[num] = { remote: grup.remote };
+				});
+				// console.log(grup.jadwal);
+				dbgroup[grup.remote] = {
+					jadwal: grup.jadwal,
+					name: grup.name,
+					remote: grup.remote,
+					bendahara: grup.bendahara,
+					sekretaris: grup.sekretaris,
+					ketua: grup.ketua,
+				};
+			});
+			console.log("Successfully restore group data");
 		}
 	} catch (err) {
 		console.error("Error connecting to MongoDB:", err);
@@ -52,4 +79,11 @@ process.on("SIGINT", async () => {
 	process.exit(0);
 });
 
-export { connectToDatabase, closeConnection, dbuser, dbgroup };
+export {
+	connectToDatabase,
+	closeConnection,
+	dbuser,
+	dbgroup,
+	dbsekretaris,
+	dbbendahara,
+};

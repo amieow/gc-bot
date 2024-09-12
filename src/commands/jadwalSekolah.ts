@@ -1,58 +1,54 @@
-import { readFile, readFileSync } from "fs";
-import bot from "../app/bot";
-import { handleCommand } from "../app/helpers";
-import { Message } from "whatsapp-web.js";
+import { readFileSync } from "fs";
+import { formatDate, handleCommand } from "../app/helpers";
+import Group from "../models/group";
+import { dbgroup, dbuser } from "../app/mongodb";
 
-export const description = "jadwal kelas 12-7";
-export const usage = "jadwal";
-
-function decideDays(date: number): string {
-	const now = new Date(date); // Mengkonversi timestamp dari detik ke milidetik
-	const daysOfWeek = [
-		"senin",
-		"selasa",
-		"rabu",
-		"kamis",
-		"jumat",
-		"sabtu",
-		"minggu",
-	];
+// Constants for days of the week
+export const daysOfWeek = [
+	"senin",
+	"selasa",
+	"rabu",
+	"kamis",
+	"jumat",
+] as const;
+export type T_Hari = (typeof daysOfWeek)[number];
+// Function to determine the day based on timestamp
+export function decideDays(date: number): (typeof daysOfWeek)[number] {
+	const now = new Date(date); // Convert timestamp from milliseconds
 	const todayIndex = now.getDay();
+
+	// Handle weekends
 	if (todayIndex === 0 || todayIndex === 6) {
 		return "senin";
 	}
+
 	const currentHour = now.getHours();
 	if (currentHour >= 13) {
-		const nextDayIndex = (todayIndex + 1) % 7;
-		if (nextDayIndex === 6) {
-			return "senin";
-		} else {
-			return daysOfWeek[nextDayIndex];
-		}
+		const nextDayIndex = (todayIndex + 1) % 5; // Limit to weekdays
+		return daysOfWeek[nextDayIndex];
 	} else {
-		// Jika waktu sebelum jam 13:00, kembalikan hari ini
-		return daysOfWeek[todayIndex];
+		return daysOfWeek[todayIndex - 1]; // Adjust for 0-based index
 	}
 }
-// import { readFileSync } from "fs";
-import path from "path";
 
-function readFileContent(fileName: string) {
-	const filePath = path.join(__dirname, "..", "jadwal", `${fileName}.txt`);
-	try {
-		const data = readFileSync(filePath, "utf8");
-		// console.log("File content:", data);
-		return data;
-	} catch (error) {
-		console.error("Error reading file:", error);
-	}
-	return "";
-}
-export function getPR(time: number) {
+// Function to get the schedule for a group
+export function getJadwal(time: number, grup: string): string {
 	const days = decideDays(time);
-	return readFileContent(days);
+	const g = dbgroup[grup].jadwal;
+
+	if (!g) return "Jadwal untuk grup ini tidak ditemukan";
+	const jadwal = g[days];
+	if (jadwal) {
+		return jadwal.j + "\n" + `Last updated : ${formatDate(jadwal.last_update)}`;
+	}
+
+	return `Jadwal di hari ${days} belum di-set nih`;
 }
-export default handleCommand(async (chat, msg) => {
-	const pr = getPR(msg.timestamp);
-	await msg.reply(pr);
+
+// Command handler
+export default handleCommand(async (chat, msg, from) => {
+	if (from.group) {
+		const jadwal = getJadwal(msg.timestamp, from.group as string);
+		await msg.reply(jadwal);
+	}
 });

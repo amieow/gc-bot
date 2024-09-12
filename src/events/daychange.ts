@@ -1,6 +1,7 @@
 import { scheduleMessage } from "../app/helpers";
+import { dbgroup } from "../app/mongodb";
 import { CONFIG } from "../config";
-
+import moment from "moment-timezone";
 const quotesAdzan = [
 	"Jangan lewatkan momen berharga, sholatlah tepat waktu.",
 	"Sholat adalah jembatan ke surga, jangan abaikan.",
@@ -35,32 +36,33 @@ interface DataSholat {
 }
 
 export async function onDayChange() {
-	const date = new Date();
-	const resSholat = await fetch(
-		`http://api.aladhan.com/v1/timingsByAddress/${encodeURIComponent(
-			CONFIG.ADDRESS,
-		)}&date=${date.toISOString().split("T")[0]}`,
-	);
-
+	const now = moment.tz("Asia/Jakarta").format("DD-MM-YYYY");
+	const url = `http://api.aladhan.com/v1/timingsByCity/${now}?city=${CONFIG.city}&country=${CONFIG.country}&method=20`;
+	const resSholat = await fetch(url);
 	if (!resSholat.ok) {
 		console.log("Request to API aladhan failed");
+		console.log(resSholat);
 		return;
 	}
 
 	// Cek struktur data yang diterima
-	const jsonData: any = await resSholat.json();
+	const jsonData = (await resSholat.json()) as DataSholat;
 	// Pastikan data sesuai dengan antarmuka yang diharapkan
-	if (jsonData && jsonData.data && jsonData.data.timings) {
-		const dataSholat: DataSholat = jsonData;
-		for (const a in dataSholat.data.timings) {
-			scheduleMessage(
-				dataSholat.data.timings[a],
-				CONFIG.GROUP_WHITELIST[0],
-				`Sudah saatnya Adzan ${a}\n${
-					quotesAdzan[Math.floor(Math.random() * quotesAdzan.length)]
-				}`,
-			);
-		}
+	if (jsonData) {
+		const dataSholat = jsonData.data.timings;
+		console.log(dataSholat);
+		// ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha", "Imsak"]
+		// Object.keys(dataSholat).forEach((grup) => {
+		// 	for (const a in dataSholat) {
+		// 		scheduleMessage(
+		// 			dataSholat[a],
+		// 			grup,
+		// 			`Sudah saatnya Adzan ${a}\n${
+		// 				quotesAdzan[Math.floor(Math.random() * quotesAdzan.length)]
+		// 			}`,
+		// 		);
+		// 	}
+		// });
 	} else {
 		console.error("Invalid data structure:", jsonData);
 	}

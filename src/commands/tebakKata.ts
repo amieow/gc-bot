@@ -4,7 +4,7 @@ import { dbgroup, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
 import { usage as usagetebak } from "./tebak";
 export const description = "untuk memulai tebak kata";
-export const usage = "tebak-kata";
+export const usage = "tebakkata";
 
 const kata = [
 	"rumah",

@@ -2,15 +2,18 @@ import mongoose, { Schema, Document } from "mongoose";
 const t = require("mongoose-sequence");
 
 const prSchema = new Schema({
-	description: { type: String, required: true },
-	id: { type: Number },
+	remote: String,
+	pr: [
+		{
+			description: { type: String, required: true },
+			id: { type: String, required: true },
+		},
+	],
 });
 interface IPr extends Document {
-	description: string;
-	id: number;
+	remote: string;
+	pr: { description: string; id: string }[];
 }
-// Terapkan plugin auto-increment ke skema
-prSchema.plugin(t(mongoose), { inc_field: "id" });
 
 const PR = mongoose.model<IPr>("PR", prSchema);
 

@@ -7,13 +7,15 @@ const userSchema = new Schema({
 	absen: { type: Number, required: true },
 	role: { type: String, required: false },
 	poin: { type: Number, required: false },
+	kelas: { type: String, required: false },
 });
 interface IUser extends Document {
 	name: string;
 	cp: string;
 	limitAiImg: number;
-	absen: number;
 	role?: string;
+	kelas?: string;
+	absen: number;
 	poin?: number;
 }
 

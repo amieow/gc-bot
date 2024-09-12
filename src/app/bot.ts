@@ -8,12 +8,20 @@ import onDisconnected from "../events/disconnected";
 import { CONFIG } from "../config";
 import { delay, msgLogger } from "./helpers";
 import SENDER_T from "../types/sender";
-import { closeConnection, dbgroup, dbuser } from "./mongodb";
+import {
+	closeConnection,
+	connectToDatabase,
+	dbbendahara,
+	dbgroup,
+	dbsekretaris,
+	dbuser,
+} from "./mongodb";
 import { onDayChange } from "../events/daychange";
 import { example } from "../commands/regist";
-let messageQueue: (() => Promise<void>)[] = [];
+import { onNineTeen } from "../events/onNineTeenPM";
+let messageQueue: (() => Promise<void>)[] = []; // Mengubah tipe array menjadi function yang mengembalikan Promise<void>
 
-function addToQueue(task: () => Promise<void>) {
+function addToQueue(task: () => Promise<void>, opt?: { blast: boolean }) {
 	messageQueue.push(task); // Tambahkan tugas ke antrian
 }
 
@@ -23,13 +31,14 @@ setInterval(async () => {
 		const task = messageQueue.shift(); // Ambil tugas pertama dari antrian
 		if (task) {
 			try {
-				await task();
+				await task(); // Jalankan tugas (panggil function)
 			} catch (error) {
 				console.error("Error processing task:", error);
 			}
 		}
 	}
-}, 1000);
+}, 2000);
+
 const bot = new Client({
 	authStrategy: new LocalAuth(),
 	puppeteer: {
@@ -80,13 +89,24 @@ commandFiles.forEach(async (file) => {
 });
 
 function verifid(from: SENDER_T) {
+	const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
+	const isBendahara = dbbendahara.hasOwnProperty(from.contact);
+	const isMods = from.contact == CONFIG.mods;
+	if (isSekretaris) {
+		from.role = "sekretaris";
+		return true;
+	}
+	if (isBendahara) {
+		from.role = "bendahara";
+		return true;
+	}
+	if (isMods) {
+		from.role = "mod";
+		return true;
+	}
 	return (
-		(from.group && CONFIG.GROUP_WHITELIST.includes(from.group)) ||
-		CONFIG.CONTACT_WHITELIST.includes(from.contact) ||
-		CONFIG.bendahara.includes(from.contact) ||
-		CONFIG.sekretaris.includes(from.contact) ||
-		CONFIG.admin.includes(from.contact) ||
-		CONFIG.mods == from.contact
+		(from.group && dbgroup.hasOwnProperty(from.group)) ||
+		CONFIG.CONTACT_WHITELIST.includes(from.contact)
 	);
 }
 
@@ -107,12 +127,15 @@ function kepemilikan(message: Message): SENDER_T {
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
 	addToQueue(async () => {
-		const a = (message.id as any).participant;
 		let from = kepemilikan(message);
 		// await delay(2000);
+		msgLogger(from, message);
 		if (verifid(from) && !message.fromMe) {
+			let command = "";
+			if (dbuser[from.contact].catchReply) {
+				command = dbuser[from.contact].catchReply || "";
+			}
 			const msgContent = message.body.trim();
-			msgLogger(from, message);
 			if (msgContent.startsWith(CONFIG.prefix)) {
 				const [commandName, ...args] = msgContent.slice(1).split(" ");
 				// console.log(commandName);
@@ -126,26 +149,47 @@ bot.on("message", async (message: Message) => {
 					return;
 				}
 				if (commands[commandName]) {
-					await delay(1000);
 					commands[commandName].fn(args.join(" "), message, from);
 				} else {
 					await message.reply("Command not recognized.");
 				}
+			} else if (command) {
+				if (message.hasQuotedMsg) {
+					const quotedMsg = await message.getQuotedMessage();
+					const quotedFrom = kepemilikan(quotedMsg);
+					if (quotedFrom.contact == bot.info.wid._serialized) {
+						const [commandName, ...args] = msgContent.slice(1).split(" ");
+						if (commands.hasOwnProperty(commandName)) {
+							commands[command].fn(args.join(" "), message, from);
+						}
+					}
+				}
 			}
-		} else {
-			msgLogger(from, message);
 		}
 	});
 });
 bot.initialize();
-cron.schedule("1 0 * * *", async () => {
-	console.log("Menjalankan tugas setiap jam 12:01 malam");
-	await onDayChange();
-});
-cron.schedule("0 19 * * 0-4", async () => {
-	console.log("Menjalankan tugas setiap jam 19:01 malam");
-});
+cron.schedule(
+	"1 0 * * *",
+	async () => {
+		console.log("Menjalankan tugas setiap jam 12:01 malam");
+		onDayChange();
+	},
+	{
+		timezone: "Asia/Jakarta",
+	},
+);
+cron.schedule(
+	"0 19 * * 0-4",
+	async () => {
+		console.log("Menjalankan tugas setiap jam 19:01 malam");
+		onNineTeen();
+	},
+	{
+		timezone: "Asia/Jakarta",
+	},
+);
 const prPath = path.resolve(__dirname, "../db/pr.json");
-export { commands, prPath, kepemilikan };
+export { commands, prPath, kepemilikan, addToQueue };
 // export
 export default bot;
