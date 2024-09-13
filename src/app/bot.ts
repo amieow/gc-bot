@@ -132,17 +132,15 @@ bot.on("message", async (message: Message) => {
 		msgLogger(from, message);
 		if (verifid(from) && !message.fromMe) {
 			let command = "";
-			if (dbuser[from.contact].catchReply) {
+			let isRegistered = dbuser && dbuser.hasOwnProperty(from.contact);
+			if (isRegistered) {
 				command = dbuser[from.contact].catchReply || "";
 			}
 			const msgContent = message.body.trim();
 			if (msgContent.startsWith(CONFIG.prefix)) {
 				const [commandName, ...args] = msgContent.slice(1).split(" ");
 				// console.log(commandName);
-				if (
-					!(dbuser && dbuser.hasOwnProperty(from.contact)) &&
-					commandName != "regist"
-				) {
+				if (!isRegistered && commandName != "regist") {
 					await message.reply(
 						`whoops anda harus regist dulu untuk memakai bot\ncontoh : ${example}`,
 					);
