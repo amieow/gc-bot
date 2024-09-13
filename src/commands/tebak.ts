@@ -66,7 +66,7 @@ export default handleCommand(async (chat, msg, from) => {
 					klue += "🟥";
 				}
 			}
-			await msg.reply("*tebakan salah*\n" + klue);
+			await msg.reply(klue);
 		}
 		return;
 	}
@@ -86,7 +86,15 @@ export default handleCommand(async (chat, msg, from) => {
 				dbuser[from.contact].playestime = 0;
 			}
 		} else {
-			await msg.reply("*tebakan salah*");
+			let klue = "";
+			for (let i = 0; i < jawab.length; i++) {
+				if (i + 1 < chat.length && chat[i] == jawab[i]) {
+					klue += "🟩";
+				} else {
+					klue += "🟥";
+				}
+			}
+			await msg.reply(klue);
 		}
 	}
 });
