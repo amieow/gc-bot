@@ -9,7 +9,7 @@ export async function onNineTeen() {
 	const now = moment.tz("Asia/Jakarta").toDate();
 	Object.keys(dbgroup).forEach(async (key) => {
 		addToQueue(async () => {
-			let jadwal = getJadwal(now.getTime(), key);
+			let jadwal = getJadwal(now, key);
 			if (!jadwal) {
 				jadwal = "Jadwal ga ketemu";
 			}
