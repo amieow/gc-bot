@@ -149,7 +149,7 @@ bot.on("message", async (message: Message) => {
 				}
 				if (commands[commandName]) {
 					commands[commandName].fn(args.join(" "), message, from);
-				} else {
+				} else if (!from.group) {
 					await message.reply("Command tidak dikenali");
 				}
 			} else if (command) {
