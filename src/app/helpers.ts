@@ -48,6 +48,9 @@ export async function loading(msg: Message, process: () => Promise<void>) {
 		try {
 			// Cek apakah pesan masih ada sebelum menambahkan reaksi gagal
 			await msg.react("❌");
+			if (error instanceof Error) {
+				await msg.reply(error.message);
+			}
 		} catch (err) {
 			console.log(
 				"Pesan mungkin telah dihapus atau tidak bisa ditambah reaksi.",

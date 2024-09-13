@@ -185,6 +185,7 @@ export default handleCommand(async (chat, msg, from) => {
 			playestime: (dbuser[from.contact].playestime || 0) + 1,
 		};
 	}
+	console.log("Jawaban tebak kata : ", kataterpilih);
 	await bot.sendMessage(
 		msg.id.remote,
 		`*TEBAK KATA*

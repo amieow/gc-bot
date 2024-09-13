@@ -37,7 +37,7 @@ setInterval(async () => {
 			}
 		}
 	}
-}, 1000);
+}, 2000);
 
 const bot = new Client({
 	authStrategy: new LocalAuth(),

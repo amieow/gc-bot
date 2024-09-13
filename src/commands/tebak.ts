@@ -16,17 +16,38 @@ export default handleCommand(async (chat, msg, from) => {
 			if (chat == jawab) {
 				dbgroup[from.group].anskata = undefined;
 				await msg.reply("benar");
-				await Gamepoin.findOneAndUpdate(
-					{ group: from.group, "leaderboard.cp": from.contact },
-					{
-						$inc: { "leaderboard.$.poin": 10 },
-						$setOnInsert: {
-							"leaderboard.$.name": dbuser[from.contact].name,
-							"leaderboard.$.absen": String(dbuser[from.contact].absen),
+				const existingEntry = await Gamepoin.findOne({ group: from.group });
+
+				if (existingEntry) {
+					// Jika ada, gunakan operator $ untuk memperbarui poin
+					await Gamepoin.findOneAndUpdate(
+						{ group: from.group },
+						{
+							$inc: { "leaderboard.$.poin": 10 },
+							$set: {
+								"leaderboard.$.name": dbuser[from.contact].name,
+								"leaderboard.$.absen": String(dbuser[from.contact].absen),
+							},
 						},
-					},
-					{ upsert: true, new: true },
-				);
+						{ new: true },
+					);
+				} else {
+					// Jika tidak ada, tambahkan entri baru ke dalam leaderboard
+					await Gamepoin.findOneAndUpdate(
+						{ group: from.group },
+						{
+							$push: {
+								leaderboard: {
+									cp: from.contact,
+									name: dbuser[from.contact].name,
+									absen: String(dbuser[from.contact].absen),
+									poin: 10,
+								},
+							},
+						},
+						{ upsert: true, new: true },
+					);
+				}
 				await msg.reply(
 					`*Tebakan benar*\n+10 poin ${dbuser[from.contact].name}`,
 				);
@@ -38,7 +59,15 @@ export default handleCommand(async (chat, msg, from) => {
 				}
 				return;
 			}
-			await msg.reply("*tebakan salah*");
+			let klue = "";
+			for (let i = 0; i < jawab.length; i++) {
+				if (i + 1 < chat.length && chat[i] == jawab[i]) {
+					klue += "🟩";
+				} else {
+					klue += "🟥";
+				}
+			}
+			await msg.reply("*tebakan salah*\n" + klue);
 		}
 		return;
 	}
