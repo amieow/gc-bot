@@ -30,10 +30,10 @@ export default handleCommand(async (chat, msg, from) => {
 
 		let ramTotal: string | number = NotDetect;
 		let ramUsed: string | number = NotDetect;
+		let ramPer: string | number = NotDetect;
 
 		let netsIn: string | number = NotDetect;
 		let netsOut: string | number = NotDetect;
-
 		// Get the disk name, adjust based on your OS
 		const diskName = process.platform === "win32" ? "C:" : "/"; // For Windows 'C:', for Unix-based systems '/'
 
@@ -62,9 +62,10 @@ export default handleCommand(async (chat, msg, from) => {
 				.then((info) => {
 					ramTotal = info.totalMemMb + " MB";
 					ramUsed = info.usedMemMb + " MB";
+					ramPer = ((info.usedMemMb / info.totalMemMb) * 100).toFixed(2) + " %";
 				})
 				.catch(() => {
-					ramTotal = ramUsed = NotDetect;
+					ramTotal = ramUsed = ramPer = NotDetect;
 				}),
 			netstat
 				.inOut()
@@ -91,15 +92,9 @@ OS : ${OS}
 CPU Model : ${cpuModel}
 CPU Core : ${cpuCore} Core
 CPU : ${cpuPer}%
-Ram : ${ramUsed} / ${ramTotal} (${
-			typeof ramUsed === "number" && typeof ramTotal === "number"
-				? Math.round(100 * (parseFloat(ramUsed) / parseFloat(ramTotal))) + "%"
-				: NotDetect
-		})
+Ram : ${ramUsed} / ${ramTotal} (${ramPer})
 Drive : ${driveUsed} / ${driveTotal} (${drivePer})
 Ping : ${pingTime} ms
-Internet IN : ${netsIn}
-Internet OUT : ${netsOut}
 `;
 
 		// Reply with the status message

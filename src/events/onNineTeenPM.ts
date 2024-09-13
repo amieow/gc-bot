@@ -4,9 +4,10 @@ import { getJadwal } from "../commands/jadwalSekolah";
 import { CONFIG } from "../config";
 import bot, { addToQueue } from "../app/bot";
 import PR from "../models/pr";
+import { getCurrentDate } from "../app/helpers";
 
 export async function onNineTeen() {
-	const now = moment.tz("Asia/Jakarta").toDate();
+	const now = getCurrentDate();
 	Object.keys(dbgroup).forEach(async (key) => {
 		addToQueue(async () => {
 			let jadwal = getJadwal(now, key);

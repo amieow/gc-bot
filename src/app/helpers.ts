@@ -2,17 +2,32 @@
 import { Message } from "whatsapp-web.js";
 import SENDER_T from "../types/sender";
 import { red, bgCyan, bgGreen } from "colorette";
+import moment from "moment-timezone";
 import schedule from "node-schedule";
 import bot from "./bot";
 import shortUUID from "short-uuid";
 // import { promises as fs } from "fs";
 // const chalk = require("chalk");
-
+export function getCurrentDate(): Date {
+	return moment.utc().tz("Asia/Jakarta").toDate();
+}
 export const handleCommand = (
 	listener: (command: string, message: Message, from: SENDER_T) => void,
 ) => {
-	return (command: string, message: Message, from: SENDER_T) =>
-		listener(command, message, from);
+	return (command: string, message: Message, from: SENDER_T) => {
+		try {
+			// Panggil listener dan tangani hasilnya
+			listener(command, message, from);
+		} catch (error) {
+			// Cek tipe error jika perlu
+			if (error instanceof Error) {
+				console.error("Error occurred:", error.message);
+				// Jika perlu, lakukan hal lain seperti logging ke sistem monitoring
+			} else {
+				console.error("An unknown error occurred:", error);
+			}
+		}
+	};
 };
 
 export const formatDate = (time: number): string => {

@@ -16,7 +16,10 @@ interface IGamePoin extends Document {
 }
 export type games = {
 	anskata?: string;
-	ansmath?: number;
+	ansmath?: {
+		ans: number;
+		poin: number;
+	};
 	playestime?: number;
 };
 const Gamepoin = mongoose.model<IGamePoin>("game-poin", gamePoinSchema);

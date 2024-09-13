@@ -1,4 +1,4 @@
-import { scheduleMessage } from "../app/helpers";
+import { getCurrentDate, scheduleMessage } from "../app/helpers";
 import { dbgroup } from "../app/mongodb";
 import { CONFIG } from "../config";
 import moment from "moment-timezone";
@@ -36,7 +36,7 @@ interface DataSholat {
 }
 
 export async function onDayChange() {
-	const now = moment.tz("Asia/Jakarta").format("DD-MM-YYYY");
+	const now = getCurrentDate();
 	const url = `http://api.aladhan.com/v1/timingsByCity/${now}?city=${CONFIG.city}&country=${CONFIG.country}&method=20`;
 	const resSholat = await fetch(url);
 	if (!resSholat.ok) {
