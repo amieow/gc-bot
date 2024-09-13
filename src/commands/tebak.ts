@@ -15,13 +15,12 @@ export default handleCommand(async (chat, msg, from) => {
 		if (jawab) {
 			if (chat == jawab) {
 				dbgroup[from.group].anskata = undefined;
-				await msg.reply("benar");
 				const existingEntry = await Gamepoin.findOne({ group: from.group });
 
 				if (existingEntry) {
 					// Jika ada, gunakan operator $ untuk memperbarui poin
 					await Gamepoin.findOneAndUpdate(
-						{ group: from.group },
+						{ group: from.group, "leaderboard.cp": from.contact },
 						{
 							$inc: { "leaderboard.$.poin": 10 },
 							$set: {
@@ -51,7 +50,7 @@ export default handleCommand(async (chat, msg, from) => {
 				await msg.reply(
 					`*Tebakan benar*\n+10 poin ${dbuser[from.contact].name}`,
 				);
-				if ((dbgroup[from.group].playestime as number) >= 5) {
+				if ((dbgroup[from.group].playestime as number) <= 5) {
 					await delay(1000);
 					tebakKata(chat, msg, from);
 				} else {
