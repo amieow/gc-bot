@@ -35,23 +35,38 @@ export const formatDate = (time: number): string => {
 
 export async function loading(msg: Message, process: () => Promise<void>) {
 	try {
-		// React with a loading emoji
-		await delay(1000);
+		// Coba untuk bereaksi dengan emoji loading
 		await msg.react("🔄");
 
-		// Execute the process (like fetching or generating something)
+		// Jalankan proses utama
 		await process();
 
-		// React with a success emoji after the process is done
+		// Jika pesan masih ada, bereaksi dengan emoji sukses
 		await msg.react("✅");
 	} catch (error) {
-		// React with a failure emoji in case of an error
-		await msg.react("❌");
+		// Jika ada error, bereaksi dengan emoji gagal
+		try {
+			// Cek apakah pesan masih ada sebelum menambahkan reaksi gagal
+			await msg.react("❌");
+		} catch (err) {
+			console.log(
+				"Pesan mungkin telah dihapus atau tidak bisa ditambah reaksi.",
+			);
+		}
+
+		// Jika error adalah instance dari Error, kirim pesan error jika bisa
 		if (error instanceof Error) {
-			await msg.reply(error.message);
+			try {
+				await msg.reply(error.message);
+			} catch (err) {
+				console.log(
+					"Tidak dapat mengirim balasan, pesan mungkin telah dihapus.",
+				);
+			}
 		}
 	}
 }
+
 import { randomBytes } from "crypto";
 
 export function generateID(length: number): string {
