@@ -8,6 +8,10 @@ const userSchema = new Schema({
 	role: { type: String, required: false },
 	poin: { type: Number, required: false },
 	kelas: { type: String, required: false },
+	afk: {
+		time: { type: Number, default: Date.now },
+		reason: { type: String, default: "" },
+	},
 });
 interface IUser extends Document {
 	name: string;
