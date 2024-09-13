@@ -126,11 +126,12 @@ function kepemilikan(message: Message): SENDER_T {
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
-	addToQueue(async () => {
-		let from = kepemilikan(message);
-		// await delay(2000);
-		msgLogger(from, message);
-		if (verifid(from) && !message.fromMe) {
+
+	let from = kepemilikan(message);
+	// await delay(2000);
+	msgLogger(from, message);
+	if (verifid(from) && !message.fromMe) {
+		addToQueue(async () => {
 			let command = "";
 			let isRegistered = dbuser && dbuser.hasOwnProperty(from.contact);
 			if (isRegistered) {
@@ -149,7 +150,7 @@ bot.on("message", async (message: Message) => {
 				if (commands[commandName]) {
 					commands[commandName].fn(args.join(" "), message, from);
 				} else {
-					await message.reply("Command not recognized.");
+					await message.reply("Command tidak dikenali");
 				}
 			} else if (command) {
 				if (message.hasQuotedMsg) {
@@ -163,8 +164,8 @@ bot.on("message", async (message: Message) => {
 					}
 				}
 			}
-		}
-	});
+		});
+	}
 });
 bot.initialize();
 cron.schedule(
@@ -187,7 +188,7 @@ cron.schedule(
 		timezone: "Asia/Jakarta",
 	},
 );
-const prPath = path.resolve(__dirname, "../db/pr.json");
-export { commands, prPath, kepemilikan, addToQueue };
+
+export { commands, kepemilikan, addToQueue };
 // export
 export default bot;
