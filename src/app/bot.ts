@@ -169,7 +169,7 @@ bot.on("message", async (message: Message) => {
 });
 bot.initialize();
 cron.schedule(
-	"1 0 * * *",
+	"23 0 * * *",
 	async () => {
 		console.log("Menjalankan tugas setiap jam 12:01 malam");
 		onDayChange();

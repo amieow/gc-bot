@@ -53,7 +53,7 @@ export async function onDayChange() {
 		console.log(dataSholat);
 		Object.keys(dbgroup).forEach((grup) => {
 			let tmp: string;
-			for (const a in [
+			for (const a of [
 				"Fajr",
 				"Sunrise",
 				"Dhuhr",
