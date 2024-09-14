@@ -99,18 +99,24 @@ export function delay(ms: number) {
 }
 export function scheduleMessage(time: string, chatId: string, message: string) {
 	const [hour, minute] = time.split(":").map(Number);
-	const job = schedule.scheduleJob({ hour, minute }, async () => {
-		await bot.sendMessage(chatId, message);
-		console.log(`Message sent to ${chatId} at ${time}`);
-	});
+	const job = schedule.scheduleJob(
+		{ hour, minute, tz: "Asia/Jakarta" },
+		async () => {
+			await bot.sendMessage(chatId, message);
+			console.log(`Message sent to ${chatId} at ${time}`);
+		},
+	);
 
 	return job;
 }
+
+export function formatSerializedNumberToMention(number: string) {
+	return "@" + number.replace("@c.us", "");
+}
 // export const custom = customAlphabet("abcdefghijklmnopqrstuvwxyz1234567890");
 export async function msgLogger(from: SENDER_T, message: Message) {
-	// const chalk = (await import("chalk")).default;
-	// const splt = message.id.remote.split("-");
-	const msg = message.body || (message.isGif ? "Sent a gif*" : "");
+	const msg = message.body || getMessageType(message); // Dapatkan tipe pesan jika tidak ada teks
+
 	if (from.group) {
 		console.log(
 			`${bgCyan(`[${from.group}]`)}${bgGreen(`[${from.contact}]`)} : ${red(
@@ -120,5 +126,17 @@ export async function msgLogger(from: SENDER_T, message: Message) {
 	} else {
 		console.log(`${bgGreen(`[${from.contact}]`)} : ${red(msg)}`);
 	}
-	// console.log(message);
+}
+
+// Fungsi untuk menentukan tipe pesan non-teks
+function getMessageType(message: Message): string {
+	if (message.isGif) return "Sent a gif*";
+	if (message.hasMedia) {
+		if (message.type === "image") return "Sent an image*";
+		if (message.type === "video") return "Sent a video*";
+		if (message.type === "sticker") return "Sent a sticker*";
+		if (message.type === "audio") return "Sent an audio file*";
+		if (message.type === "document") return "Sent a document*";
+	}
+	return "Sent an unsupported media*";
 }

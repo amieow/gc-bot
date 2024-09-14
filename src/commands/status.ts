@@ -3,7 +3,7 @@ import ping from "ping";
 import { CONFIG } from "../config";
 import osu from "node-os-utils";
 
-export const description = "get bot info such as ping, ip, city, region";
+export const description = "get bot info such as ping, Ram usage";
 export const usage = "status";
 export const title = "Check Bot Status";
 
@@ -84,7 +84,12 @@ export default handleCommand(async (chat, msg, from) => {
 
 		const neww = performance.now();
 		const pingTime = Math.round(neww - old);
+		const uptimeHours = osu.os.uptime(); // Uptime in hours
 
+		// Convert uptime into days, hours, and minutes
+		const days = Math.floor(uptimeHours / 24);
+		const hours = Math.floor(uptimeHours % 24);
+		const minutes = Math.floor((uptimeHours * 60) % 60);
 		// Generate the status message
 		const txt = `
 「 Status 」
@@ -95,6 +100,7 @@ CPU : ${cpuPer}%
 Ram : ${ramUsed} / ${ramTotal} (${ramPer})
 Drive : ${driveUsed} / ${driveTotal} (${drivePer})
 Ping : ${pingTime} ms
+Uptime : ${days} Hari ${hours} Jam ${minutes} Menit
 `;
 
 		// Reply with the status message
