@@ -17,7 +17,7 @@ interface IGamePoin extends Document {
 export type games = {
 	anskata?: string;
 	ansmath?: {
-		ans: number;
+		ans: string;
 		poin: number;
 	};
 	playestime?: number;

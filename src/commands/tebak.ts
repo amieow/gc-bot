@@ -1,4 +1,8 @@
-import { delay, handleCommand } from "../app/helpers";
+import {
+	delay,
+	formatSerializedNumberToMention,
+	handleCommand,
+} from "../app/helpers";
 import { dbgroup, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
 import Gamepoin from "../models/game";
@@ -59,7 +63,13 @@ export default handleCommand(async (chat, msg, from) => {
 				dbgroup[from.group].anskata = undefined;
 				await addPoinToClient(from, 10);
 				await msg.reply(
-					`*Tebakan benar*\n+10 poin ${dbuser[from.contact].name}`,
+					`*Tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
+						from.contact,
+					)}`,
+					undefined,
+					{
+						mentions: [from.contact],
+					},
 				);
 				if ((dbgroup[from.group].playestime as number) <= 5) {
 					await delay(2000);
@@ -86,7 +96,15 @@ export default handleCommand(async (chat, msg, from) => {
 		if (chat == jawab) {
 			dbuser[from.contact].anskata = undefined;
 			await addPoinToClient(from, 10);
-			await msg.reply(`*tebakan benar*\n+10 poin ${dbuser[from.contact].name}`);
+			await msg.reply(
+				`*tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
+					from.contact,
+				)}`,
+				undefined,
+				{
+					mentions: [from.contact],
+				},
+			);
 			if ((dbuser[from.contact].playestime as number) < 5) {
 				tebakKata(chat, msg, from);
 			} else {

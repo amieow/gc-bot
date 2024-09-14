@@ -68,15 +68,16 @@ export default handleCommand(async (chat, msg, from) => {
 	problem = problem.replace(/\*/g, "x");
 	if (from.group) {
 		dbgroup[from.group].ansmath = {
-			ans: answer,
+			ans: String(answer),
 			poin: jumlahoperasi * 5,
 		};
 	} else {
 		dbuser[from.contact].ansmath = {
-			ans: answer,
+			ans: String(answer),
 			poin: jumlahoperasi * 5,
 		};
 	}
+	console.log("answer math : ", answer);
 	await msg.reply(
 		`*${problem} = ? (${jumlahoperasi * 5} poin)*\nuntuk menjawab ketik *${
 			CONFIG.prefix
