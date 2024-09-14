@@ -84,7 +84,13 @@ export default handleCommand(async (chat, msg, from) => {
 
 		const neww = performance.now();
 		const pingTime = Math.round(neww - old);
-		const uptimeHours = osu.os.uptime(); // Uptime in hours
+		const uptimeSeconds = osu.os.uptime(); // Uptime in seconds
+
+		// Konversi uptime menjadi hari, jam, menit
+		const uptimeDays = Math.floor(uptimeSeconds / (24 * 3600));
+		const uptimeHours = Math.floor((uptimeSeconds % (24 * 3600)) / 3600);
+		const uptimeMinutes = Math.floor((uptimeSeconds % 3600) / 60);
+
 		// Generate the status message
 		const txt = `
 「 Status 」
@@ -95,7 +101,7 @@ CPU : ${cpuPer}%
 Ram : ${ramUsed} / ${ramTotal} (${ramPer})
 Drive : ${driveUsed} / ${driveTotal} (${drivePer})
 Ping : ${pingTime} ms
-Uptime :${uptimeHours} Hrs
+Uptime : ${uptimeDays} Days, ${uptimeHours} Hours, ${uptimeMinutes} Minutes
 `;
 
 		// Reply with the status message
