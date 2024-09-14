@@ -15,34 +15,33 @@ export async function addPoinToClient(from: SENDER_T, inc: number) {
 		const existingEntry = await Gamepoin.findOne({ group: from.group });
 
 		if (existingEntry) {
-			// Jika ada, gunakan operator $ untuk memperbarui poin
-			await Gamepoin.findOneAndUpdate(
-				{ group: from.group, "leaderboard.cp": from.contact },
-				{
-					$inc: { "leaderboard.$.poin": inc },
-					$set: {
-						"leaderboard.$.name": dbuser[from.contact].name,
-						"leaderboard.$.absen": String(dbuser[from.contact].absen),
-					},
-				},
-				{ new: true },
+			const ind = existingEntry.leaderboard.findIndex(
+				(v) => v.cp == from.contact,
 			);
+			if (ind == -1) {
+				existingEntry.leaderboard.push({
+					cp: from.contact,
+					name: dbuser[from.contact].name,
+					absen: String(dbuser[from.contact].absen),
+					poin: inc,
+				});
+			} else {
+				existingEntry.leaderboard[ind].poin += inc;
+			}
+			await existingEntry.save();
 		} else {
 			// Jika tidak ada, tambahkan entri baru ke dalam leaderboard
-			await Gamepoin.findOneAndUpdate(
-				{ group: from.group },
-				{
-					$push: {
-						leaderboard: {
-							cp: from.contact,
-							name: dbuser[from.contact].name,
-							absen: String(dbuser[from.contact].absen),
-							poin: inc,
-						},
+			await Gamepoin.create({
+				leaderboard: [
+					{
+						cp: from.contact,
+						name: dbuser[from.contact].name,
+						absen: String(dbuser[from.contact].absen),
+						poin: inc,
 					},
-				},
-				{ upsert: true, new: true },
-			);
+				],
+				group: from.group,
+			});
 		}
 	} else {
 		await User.findOneAndUpdate(
@@ -63,7 +62,7 @@ export default handleCommand(async (chat, msg, from) => {
 					`*Tebakan benar*\n+10 poin ${dbuser[from.contact].name}`,
 				);
 				if ((dbgroup[from.group].playestime as number) <= 5) {
-					await delay(1000);
+					await delay(2000);
 					tebakKata(chat, msg, from);
 				} else {
 					dbgroup[from.group].playestime = 0;
