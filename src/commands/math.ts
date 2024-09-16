@@ -12,14 +12,6 @@ function getRandomOperation(): string {
 	const operations = ["+", "-", "*"];
 	return operations[Math.floor(Math.random() * operations.length)];
 }
-
-// Fungsi untuk menghitung hasil dari ekspresi matematika
-function evaluateExpression(expression: string): number {
-	// Menggunakan eval untuk mengevaluasi ekspresi matematika
-	// Hati-hati dengan penggunaan eval dalam aplikasi produksi
-	return eval(expression);
-}
-
 // Fungsi untuk membuat soal matematika acak dengan beberapa operasi
 function generateComplexMathProblem(operationsCount: number) {
 	if (operationsCount < 1) {
@@ -38,7 +30,7 @@ function generateComplexMathProblem(operationsCount: number) {
 		currentNumber = nextNumber;
 	}
 
-	const result = evaluateExpression(expression);
+	const result : number = eval(expression);
 	return {
 		problem: expression,
 		answer: result,

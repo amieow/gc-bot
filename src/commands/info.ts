@@ -19,5 +19,7 @@ Bendahara : ${group.bendahara
 Sekretaris : ${group.sekretaris
 		.map((v) => formatSerializedNumberToMention(v))
 		.join(" ")}`;
-	await msg.reply(txt);
+	await msg.reply(txt, undefined, {
+		mentions: [...group.bendahara, ...group.sekretaris],
+	});
 });

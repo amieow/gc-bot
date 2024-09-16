@@ -67,7 +67,7 @@ export async function onDayChange() {
 				scheduleMessage(
 					dataSholat[a],
 					grup,
-					`Sudah saatnya Adzan ${tmp}\n${
+					`*Sudah saatnya Adzan ${tmp}*\n${
 						quotesAdzan[Math.floor(Math.random() * quotesAdzan.length)]
 					}`,
 				);

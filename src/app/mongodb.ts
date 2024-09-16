@@ -32,6 +32,7 @@ async function connectToDatabase() {
 					name: user.name,
 					absen: user.absen,
 					kelas: user.kelas,
+					poin : user.poin
 				};
 			});
 			console.log("Successfully restore user data");

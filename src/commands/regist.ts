@@ -21,6 +21,7 @@ export default handleCommand(async (chat, msg, from) => {
 		dbuser[from.contact] = {
 			name: namaPanggilan,
 			absen: Number(absen),
+			poin : 0
 		};
 		await User.create({
 			cp: from.contact,

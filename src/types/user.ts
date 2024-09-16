@@ -5,4 +5,5 @@ export type T_User = {
 	absen: number;
 	kelas?: string;
 	catchReply?: string;
+	poin
 } & games;

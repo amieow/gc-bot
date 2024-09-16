@@ -31,5 +31,8 @@ export default handleCommand(async (chat, msg, from) => {
 				mentions: [from.contact],
 			},
 		);
+	} else {
+		await msg.reply(`salah`);
+		return;
 	}
 });
