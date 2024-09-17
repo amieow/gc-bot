@@ -147,7 +147,7 @@ bot.on("message", async (message: Message) => {
 					);
 					return;
 				}
-				if (commands[commandName]) {
+				if (commands[commandName] && !commands[commandName].tags?.includes("closed")) {
 					commands[commandName].fn(args.join(" "), message, from);
 				} else if (!from.group) {
 					await message.reply("Command tidak dikenali");

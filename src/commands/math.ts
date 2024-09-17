@@ -39,6 +39,7 @@ function generateComplexMathProblem(operationsCount: number) {
 
 export const usage = "math";
 export const description = "Menjawab soal matematika sederhana";
+export const tags = ["hidden","closed"]
 export default handleCommand(async (chat, msg, from) => {
 	// const text =
 	// 	"berikan saya soal matematika cerita secara random saja untuk tingkat SMA satu saja, kalau ada satuan tuliskan itu dalam soalnya misal : '(m,cm)' kalau tidak tidak usah, dan yang di ans hanya number saja,kalau memungkinkan kasih soal-soal yang high order of thinking ";

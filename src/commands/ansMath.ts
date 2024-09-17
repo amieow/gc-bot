@@ -6,7 +6,7 @@ import { addPoinToClient } from "./tebak";
 export const usage = "ans <jawaban>";
 export const description = "jawab soal yang telah diberikan";
 export const example = `ans 10`;
-export const tags = ["hidden"];
+export const tags = ["hidden","closed"];
 export default handleCommand(async (chat, msg, from) => {
 	let jawaban: { ans: string; poin: number } | undefined;
 	if (from.group) {
