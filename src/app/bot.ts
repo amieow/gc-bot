@@ -168,26 +168,27 @@ bot.on("message", async (message: Message) => {
 	}
 });
 bot.initialize();
-cron.schedule(
-	"23 0 * * *",
-	async () => {
-		console.log("Menjalankan tugas setiap jam 12:01 malam");
-		onDayChange();
-	},
-	{
-		timezone: "Asia/Jakarta",
-	},
-);
-cron.schedule(
-	"0 19 * * 0-4",
-	async () => {
-		console.log("Menjalankan tugas setiap jam 19:01 malam");
-		onNineTeen();
-	},
-	{
-		timezone: "Asia/Jakarta",
-	},
-);
+// nyalain kalau sedang showcase project p5
+// cron.schedule(
+// 	"23 0 * * *",
+// 	async () => {
+// 		console.log("Menjalankan tugas setiap jam 12:01 malam");
+// 		onDayChange();
+// 	},
+// 	{
+// 		timezone: "Asia/Jakarta",
+// 	},
+// );
+// cron.schedule(
+// 	"0 19 * * 0-4",
+// 	async () => {
+// 		console.log("Menjalankan tugas setiap jam 19:01 malam");
+// 		onNineTeen();
+// 	},
+// 	{
+// 		timezone: "Asia/Jakarta",
+// 	},
+// );
 
 export { commands, kepemilikan, addToQueue };
 // export
