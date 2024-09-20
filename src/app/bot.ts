@@ -37,7 +37,7 @@ setInterval(async () => {
 			}
 		}
 	}
-}, 1500);
+}, 1250);
 
 const bot = new Client({
 	authStrategy: new LocalAuth(),
@@ -130,6 +130,7 @@ bot.on("message", async (message: Message) => {
 	let from = kepemilikan(message);
 	// await delay(2000);
 	msgLogger(from, message);
+	if (from.group && !dbgroup.hasOwnProperty(from.group)) return;
 	if (verifid(from) && !message.fromMe) {
 		addToQueue(async () => {
 			let command = "";
@@ -147,7 +148,10 @@ bot.on("message", async (message: Message) => {
 					);
 					return;
 				}
-				if (commands[commandName] && !commands[commandName].tags?.includes("closed")) {
+				if (
+					commands[commandName] &&
+					!commands[commandName].tags?.includes("closed")
+				) {
 					commands[commandName].fn(args.join(" "), message, from);
 				} else if (!from.group) {
 					await message.reply("Command tidak dikenali");
