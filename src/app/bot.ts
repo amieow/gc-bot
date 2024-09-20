@@ -94,15 +94,12 @@ function verifid(from: SENDER_T) {
 	const isMods = from.contact == CONFIG.mods;
 	if (isSekretaris) {
 		from.role = "sekretaris";
-		return true;
 	}
 	if (isBendahara) {
 		from.role = "bendahara";
-		return true;
 	}
 	if (isMods) {
 		from.role = "mod";
-		return true;
 	}
 	return (
 		(from.group && dbgroup.hasOwnProperty(from.group)) ||
@@ -130,7 +127,6 @@ bot.on("message", async (message: Message) => {
 	let from = kepemilikan(message);
 	// await delay(2000);
 	msgLogger(from, message);
-	if (from.group && !dbgroup.hasOwnProperty(from.group)) return;
 	if (verifid(from) && !message.fromMe) {
 		addToQueue(async () => {
 			let command = "";
