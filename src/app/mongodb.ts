@@ -36,7 +36,8 @@ async function connectToDatabase() {
 				break;
 			}
 			const data = await resp.json();
-			await TebakKata.create({ data });
+			// console.log(data);
+			await TebakKata.create(data);
 			await delay(5000);
 			console.log(`fetched api skizo tech ${i + 1} time`);
 		}
