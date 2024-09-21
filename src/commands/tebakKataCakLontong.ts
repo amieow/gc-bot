@@ -13,6 +13,7 @@ export default handleCommand(async (chat, msg, from) => {
 	} else {
 		dbuser[from.contact].anskatav2 = jawaban;
 	}
+	console.log("Jawbaan dari tebakkata v2 ", jawaban);
 	await msg.reply(`
 *TEBAK KATA*
 clue : ${soal}
