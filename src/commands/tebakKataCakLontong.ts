@@ -5,6 +5,7 @@ import { randomNumber } from "./tebakKata"
 import { usage as usageTebak } from "./tebakCakLontong"
 export const usage = "tebakkata"
 export const description = "untuk memulai tebak kata (V2)"
+export const tags = ["hidden"]
 export default handleCommand(async (chat,msg,from) => {
   const rand = randomNumber(dbTebakKata.length)
   const { soal, jawaban } = dbTebakKata[rand]
