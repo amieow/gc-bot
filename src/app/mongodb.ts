@@ -21,26 +21,23 @@ let dbsekretaris: {
 let dbbendahara: {
 	[name: string]: { remote: string };
 } = {};
+let dbTebakKata: {
+	index: number;
+	soal: string;
+	jawaban: string;
+}[] = [];
 // const uri = "your-mongodb-connection-string";
 const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
 	try {
 		await mongoose.connect(url, {});
 		console.log("Connected to MongoDB");
-		for (let i = 0; i < 300; i++) {
-			const resp = await fetch(
-				"https://skizo.tech/api/game/tebakkata?apikey=Gorengan",
-			);
-			if (!resp.ok) {
-				console.log("Error Happend");
-				break;
-			}
-			const data = await resp.json();
-			// console.log(data);
-			await TebakKata.create(data);
-			await delay(5000);
-			console.log(`fetched api skizo tech ${i + 1} time`);
-		}
+		const a = await TebakKata.find();
+		dbTebakKata = a.map((v) => ({
+			index: v.index,
+			soal: v.soal,
+			jawaban: v.jawaban,
+		}));
 		const user = await User.find();
 		if (user) {
 			user.forEach((user) => {
@@ -103,4 +100,5 @@ export {
 	dbgroup,
 	dbsekretaris,
 	dbbendahara,
+	dbTebakKata
 };

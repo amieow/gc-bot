@@ -11,7 +11,7 @@ import SENDER_T from "../types/sender";
 import tebakKata from "./tebakKata";
 export const example = `${CONFIG.prefix}tebak pisang`;
 export const tags = ["hidden"];
-export const usage = `tebak <kata>`;
+export const usage = `tb <kata>`;
 export const description = "no";
 
 export async function addPoinToClient(from: SENDER_T, inc: number) {

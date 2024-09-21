@@ -20,6 +20,7 @@ export type games = {
 		ans: string;
 		poin: number;
 	};
+	anskatav2?: string
 	playestime?: number;
 };
 const Gamepoin = mongoose.model<IGamePoin>("game-poin", gamePoinSchema);

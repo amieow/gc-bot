@@ -4,7 +4,7 @@ import { dbgroup, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
 import { usage as usagetebak } from "./tebak";
 export const description = "untuk memulai tebak kata";
-export const usage = "tebakkata";
+export const usage = "wordle";
 
 const kataBenda = [
 	// Benda Umum
@@ -333,7 +333,7 @@ const kataKerja = [
 	"mengirim",
 ];
 
-function randomNumber(n: number) {
+export function randomNumber(n: number) {
 	return Math.floor(Math.random() * n);
 }
 export default handleCommand(async (chat, msg, from) => {
