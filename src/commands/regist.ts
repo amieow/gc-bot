@@ -15,13 +15,14 @@ export default handleCommand(async (chat, msg, from) => {
 	const ch = chat.split(" ");
 	if (ch.length != 2 && !/^[A-Za-z]+\s\d+$/.test(chat)) {
 		await msg.reply(`Format salah, \ncth: ${example}`);
+		return;
 	}
 	await loading(msg, async () => {
 		const [namaPanggilan, absen] = ch;
 		dbuser[from.contact] = {
 			name: namaPanggilan,
 			absen: Number(absen),
-			poin : 0
+			poin: 0,
 		};
 		await User.create({
 			cp: from.contact,
