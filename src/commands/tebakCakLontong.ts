@@ -4,7 +4,7 @@ import { addPoinToClient } from "./tebak";
 
 export const usage = "tebak <kata>";
 export const description = "untuk memulai tebak kata";
-
+export const tags = ["hidden"];
 export default handleCommand(async (chat, msg, from) => {
 	if (chat.length == 0) {
 		await msg.reply("Tebakan ga boleh kosong");
