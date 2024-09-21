@@ -123,7 +123,7 @@ function kepemilikan(message: Message): SENDER_T {
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
-
+	
 	let from = kepemilikan(message);
 	// await delay(2000);
 	msgLogger(from, message);

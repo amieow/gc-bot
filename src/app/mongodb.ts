@@ -6,6 +6,8 @@ import User from "../models/user";
 import { games } from "../models/game";
 import Group from "../models/group";
 import { T_GROUP } from "../types/group";
+import TebakKata from "../models/tebak-kata";
+import { delay } from "./helpers";
 let dbuser: {
 	[key: string]: T_User;
 } = {};
@@ -25,6 +27,19 @@ async function connectToDatabase() {
 	try {
 		await mongoose.connect(url, {});
 		console.log("Connected to MongoDB");
+		for (let i = 0; i < 300; i++) {
+			const resp = await fetch(
+				"https://skizo.tech/api/game/tebakkata?apikey=Gorengan",
+			);
+			if (!resp.ok) {
+				console.log("Error Happend");
+				break;
+			}
+			const data = await resp.json();
+			await TebakKata.create({ data });
+			await delay(5000);
+			console.log(`fetched api skizo tech ${i + 1} time`);
+		}
 		const user = await User.find();
 		if (user) {
 			user.forEach((user) => {
@@ -32,7 +47,7 @@ async function connectToDatabase() {
 					name: user.name,
 					absen: user.absen,
 					kelas: user.kelas,
-					poin : user.poin
+					poin: user.poin,
 				};
 			});
 			console.log("Successfully restore user data");
