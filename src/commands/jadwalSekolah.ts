@@ -1,4 +1,4 @@
-import { formatDate, handleCommand } from "../app/helpers";
+import { formatDate, getCurrentDate, handleCommand } from "../app/helpers";
 import { dbgroup, dbuser } from "../app/mongodb";
 import moment from "moment-timezone";
 
@@ -50,7 +50,7 @@ export function getJadwal(time: Date, grup: string): string {
 export default handleCommand(async (chat, msg, from) => {
 	if (from.group) {
 		const jadwal = getJadwal(
-			moment.tz("Asia/Jakarta").toDate(),
+			getCurrentDate(),
 			from.group as string,
 		);
 		await msg.reply(jadwal);

@@ -31,7 +31,7 @@ export const handleCommand = (
 };
 
 export const formatDate = (time: number): string => {
-	const now = new Date();
+	const now = new Date(time);
 
 	// Opsi untuk format tanggal
 	const options: Intl.DateTimeFormatOptions = {
