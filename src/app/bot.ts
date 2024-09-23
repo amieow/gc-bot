@@ -101,7 +101,8 @@ function kepemilikan(message: Message): SENDER_T {
 		contact: message.id.remote,
 	};
 }
-function verifid(from: SENDER_T) {
+function verifid(message: Message) {
+	let from = kepemilikan(message);
 	const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
 	const isBendahara = dbbendahara.hasOwnProperty(from.contact);
 	const isMods = from.contact == CONFIG.mods;
@@ -131,9 +132,9 @@ function verifid(from: SENDER_T) {
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
 
-	let from = kepemilikan(message);
+	let from: SENDER_T;
 	// await delay(2000);
-	const { newdata, result } = verifid(from);
+	const { newdata, result } = verifid(message);
 	from = newdata;
 	if (result && !message.fromMe) {
 		addToQueue(async () => {
