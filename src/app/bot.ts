@@ -136,6 +136,7 @@ bot.on("message", async (message: Message) => {
 	// await delay(2000);
 	const { newdata, result } = verifid(message);
 	from = newdata;
+	console.log(from);
 	if (result && !message.fromMe) {
 		addToQueue(async () => {
 			msgLogger(from, message);
