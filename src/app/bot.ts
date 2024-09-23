@@ -101,43 +101,47 @@ function kepemilikan(message: Message): SENDER_T {
 		contact: message.id.remote,
 	};
 }
+
+let from: SENDER_T;
 function verifid(message: Message) {
 	let from = kepemilikan(message);
+
+	// Modify the properties of the original 'from' object directly
+	from.role = ""; // Initialize or reset role
 	const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
 	const isBendahara = dbbendahara.hasOwnProperty(from.contact);
-	const isMods = from.contact == CONFIG.mods;
+	const isMods = from.contact === CONFIG.mods;
+
 	if (isSekretaris) {
 		from.role = "sekretaris";
-	}
-	if (isBendahara) {
+	} else if (isBendahara) {
 		from.role = "bendahara";
-	}
-	if (isMods) {
+	} else if (isMods) {
 		from.role = "mod";
 	}
+
 	if (from.group && Gremote.hasOwnProperty(from.group)) {
 		from.isGremote = true;
 		from.child = from.group;
 		from.group = Gremote[from.group];
 	}
-	return {
-		newdata: from,
-		result:
-			(from.group && dbgroup.hasOwnProperty(from.group)) ||
-			CONFIG.CONTACT_WHITELIST.includes(from.contact),
-	};
+
+	// Return the result without creating a new object
+	return (
+		(from.group && dbgroup.hasOwnProperty(from.group)) ||
+		CONFIG.CONTACT_WHITELIST.includes(from.contact)
+	);
 }
+
 // console.log("command list : ", commands);
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
 
-	let from: SENDER_T;
 	// await delay(2000);
-	const { newdata, result } = verifid(message);
-	from = newdata;
+	const res = verifid(message);
 	console.log(from);
-	if (result && !message.fromMe) {
+	if (res && !message.fromMe) {
 		addToQueue(async () => {
 			msgLogger(from, message);
 			let command = "";
