@@ -89,29 +89,6 @@ commandFiles.forEach(async (file) => {
 	}
 });
 
-function verifid(from: SENDER_T) {
-	const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
-	const isBendahara = dbbendahara.hasOwnProperty(from.contact);
-	const isMods = from.contact == CONFIG.mods;
-	if (isSekretaris) {
-		from.role = "sekretaris";
-	}
-	if (isBendahara) {
-		from.role = "bendahara";
-	}
-	if (isMods) {
-		from.role = "mod";
-	}
-	if (from.group && Gremote.hasOwnProperty(from.group)) {
-		from.isGremote = true;
-		from.group = Gremote[from.group];
-	}
-	return (
-		(from.group && dbgroup.hasOwnProperty(from.group)) ||
-		CONFIG.CONTACT_WHITELIST.includes(from.contact)
-	);
-}
-
 function kepemilikan(message: Message): SENDER_T {
 	const a = (message.id as any).participant;
 	if (a) {
@@ -131,8 +108,30 @@ bot.on("message", async (message: Message) => {
 
 	let from = kepemilikan(message);
 	// await delay(2000);
+	function verifid() {
+		const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
+		const isBendahara = dbbendahara.hasOwnProperty(from.contact);
+		const isMods = from.contact == CONFIG.mods;
+		if (isSekretaris) {
+			from.role = "sekretaris";
+		}
+		if (isBendahara) {
+			from.role = "bendahara";
+		}
+		if (isMods) {
+			from.role = "mod";
+		}
+		if (from.group && Gremote.hasOwnProperty(from.group)) {
+			from.isGremote = true;
+			from.group = Gremote[from.group];
+		}
+		return (
+			(from.group && dbgroup.hasOwnProperty(from.group)) ||
+			CONFIG.CONTACT_WHITELIST.includes(from.contact)
+		);
+	}
 	msgLogger(from, message);
-	if (verifid(from) && !message.fromMe) {
+	if (verifid() && !message.fromMe) {
 		addToQueue(async () => {
 			let command = "";
 			let isRegistered = dbuser && dbuser.hasOwnProperty(from.contact);
