@@ -26,6 +26,9 @@ let dbTebakKata: {
 	soal: string;
 	jawaban: string;
 }[] = [];
+let Gremote: {
+	[name: string]: string;
+};
 // const uri = "your-mongodb-connection-string";
 const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
@@ -69,6 +72,7 @@ async function connectToDatabase() {
 					sekretaris: grup.sekretaris,
 					ketua: grup.ketua,
 				};
+				if (grup.Gremote) Gremote[grup.Gremote] = grup.remote;
 			});
 			console.log("Successfully restore group data");
 		}
@@ -100,5 +104,6 @@ export {
 	dbgroup,
 	dbsekretaris,
 	dbbendahara,
-	dbTebakKata
+	dbTebakKata,
+	Gremote,
 };

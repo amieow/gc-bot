@@ -18,14 +18,14 @@ export default handleCommand(async (chat, msg, from) => {
 				dbgroup[from.group].anskatav2 = undefined;
 				await addPoinToClient(from, 10);
 				await msg.reply(
-					`*kata benar*\n+10 poin ${
-						(formatSerializedNumberToMention(from.contact),
-						undefined,
-						{ mentions: [from.contact] })
-					}`,
+					`*kata benar*\n+10 poin ${formatSerializedNumberToMention(
+						from.contact,
+					)}`,
+					undefined,
+					{ mentions: [from.contact] },
 				);
 			} else {
-				await msg.reply(`kata salah`);
+				await msg.react("❌");
 			}
 		}
 		return;
@@ -43,7 +43,7 @@ export default handleCommand(async (chat, msg, from) => {
 				{ mentions: [from.contact] },
 			);
 		} else {
-			await msg.reply(`kata salah`);
+			await msg.react("❌");
 		}
 	}
 });

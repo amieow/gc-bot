@@ -15,6 +15,7 @@ import {
 	dbgroup,
 	dbsekretaris,
 	dbuser,
+	Gremote,
 } from "./mongodb";
 import { onDayChange } from "../events/daychange";
 import { example } from "../commands/regist";
@@ -101,6 +102,10 @@ function verifid(from: SENDER_T) {
 	if (isMods) {
 		from.role = "mod";
 	}
+	if (from.group && Gremote.hasOwnProperty(from.group)) {
+		from.isGremote = true;
+		from.group = Gremote[from.group];
+	}
 	return (
 		(from.group && dbgroup.hasOwnProperty(from.group)) ||
 		CONFIG.CONTACT_WHITELIST.includes(from.contact)
@@ -123,7 +128,7 @@ function kepemilikan(message: Message): SENDER_T {
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
-	
+
 	let from = kepemilikan(message);
 	// await delay(2000);
 	msgLogger(from, message);

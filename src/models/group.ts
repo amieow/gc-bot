@@ -19,6 +19,7 @@ const groupSchema = new Schema({
 	bendahara: [{ type: String, required: true }],
 	sekretaris: [{ type: String, required: true }],
 	ketua: { type: String, required: true },
+	Gremote : {type:String,required : false}
 });
 
 interface IGroup extends Document {
@@ -28,6 +29,7 @@ interface IGroup extends Document {
 	bendahara: string[];
 	sekretaris: string[];
 	ketua: string;
+	Gremote?:string
 }
 
 const Group = mongoose.model<IGroup>("Group", groupSchema);
