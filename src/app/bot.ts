@@ -126,7 +126,7 @@ bot.on("message", async (message: Message) => {
 		from.child = from.group;
 		from.group = Gremote[from.group];
 	}
-	console.log(from);
+	// console.log(from);
 
 	if (
 		(from.group && dbgroup.hasOwnProperty(from.group)) ||
