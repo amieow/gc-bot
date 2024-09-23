@@ -123,7 +123,7 @@ export async function msgLogger(from: SENDER_T, message: Message) {
 			// 	`[${from.group}]`,
 			// )}${bgGreen(`[${from.contact}]`)} : ${red(msg)}`,
 			bgBlue(`[${from.group}]`) +
-				(from.isGremote ? bgYellow(`[${from.child}]`) : "") +
+				(from.isGremote ? bgCyan(`[${from.child}]`) : "") +
 				bgGreen(`[${from.contact}]`) +
 				" : " +
 				red(msg),

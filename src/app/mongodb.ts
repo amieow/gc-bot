@@ -74,6 +74,7 @@ async function connectToDatabase() {
 				};
 				if (grup.Gremote) Gremote[grup.Gremote] = grup.remote;
 			});
+			// console.log(Gremote);
 			console.log("Successfully restore group data");
 		}
 	} catch (err) {
