@@ -1,6 +1,12 @@
-import { formatSerializedNumberToMention, handleCommand } from "../app/helpers";
+import {
+	delay,
+	formatSerializedNumberToMention,
+	handleCommand,
+} from "../app/helpers";
 import { dbgroup, dbuser } from "../app/mongodb";
 import { addPoinToClient } from "./tebak";
+import tebakKata from "./tebakKata";
+import tebakKataCakLontong from "./tebakKataCakLontong";
 
 export const usage = "tebak <kata>";
 export const description = "untuk memulai tebak kata";
@@ -24,6 +30,12 @@ export default handleCommand(async (chat, msg, from) => {
 					undefined,
 					{ mentions: [from.contact] },
 				);
+				if ((dbgroup[from.group].playestime as number) <= 5) {
+					await delay(2000);
+					tebakKataCakLontong(chat, msg, from);
+				} else {
+					dbgroup[from.group].playestime = 0;
+				}
 			} else {
 				await msg.react("❌");
 			}
@@ -42,6 +54,11 @@ export default handleCommand(async (chat, msg, from) => {
 				undefined,
 				{ mentions: [from.contact] },
 			);
+			if ((dbuser[from.contact].playestime as number) < 5) {
+				tebakKata(chat, msg, from);
+			} else {
+				dbuser[from.contact].playestime = 0;
+			}
 		} else {
 			await msg.react("❌");
 		}

@@ -3,6 +3,7 @@ type SENDER_T = {
 	contact: string;
 	role?: string;
 	isGremote?: boolean;
+	child?: string;
 };
 
 export default SENDER_T;

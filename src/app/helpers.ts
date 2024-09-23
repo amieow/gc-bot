@@ -1,7 +1,7 @@
 // import { customAlphabet } from "nanoid";
 import { Message } from "whatsapp-web.js";
 import SENDER_T from "../types/sender";
-import { red, bgCyan, bgGreen } from "colorette";
+import { red, bgCyan, bgGreen, bgBlue, bgYellow } from "colorette";
 import moment from "moment-timezone";
 import schedule from "node-schedule";
 import bot from "./bot";
@@ -119,9 +119,14 @@ export async function msgLogger(from: SENDER_T, message: Message) {
 
 	if (from.group) {
 		console.log(
-			`${bgCyan(`[${from.group}]`)}${bgGreen(`[${from.contact}]`)} : ${red(
-				msg,
-			)}`,
+			// `${from.isGremote ? bgBlue(`[${from.group}]`) : ""}${bgYellow(
+			// 	`[${from.group}]`,
+			// )}${bgGreen(`[${from.contact}]`)} : ${red(msg)}`,
+			bgBlue(`[${from.group}]`) +
+				(from.isGremote ? bgYellow(`[${from.child}]`) : "") +
+				bgGreen(`[${from.contact}]`) +
+				" : " +
+				red(msg),
 		);
 	} else {
 		console.log(`${bgGreen(`[${from.contact}]`)} : ${red(msg)}`);
