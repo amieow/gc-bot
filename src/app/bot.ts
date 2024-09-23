@@ -130,9 +130,9 @@ bot.on("message", async (message: Message) => {
 			CONFIG.CONTACT_WHITELIST.includes(from.contact)
 		);
 	}
-	msgLogger(from, message);
 	if (verifid() && !message.fromMe) {
 		addToQueue(async () => {
+			msgLogger(from, message);
 			let command = "";
 			let isRegistered = dbuser && dbuser.hasOwnProperty(from.contact);
 			if (isRegistered) {
@@ -153,7 +153,7 @@ bot.on("message", async (message: Message) => {
 					!commands[commandName].tags?.includes("closed")
 				) {
 					commands[commandName].fn(args.join(" "), message, from);
-				} else if (!from.group) {
+				} else if (!from.group || from.isGremote) {
 					await message.reply("Command tidak dikenali");
 				}
 			} else if (command) {
