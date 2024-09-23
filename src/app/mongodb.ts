@@ -28,7 +28,7 @@ let dbTebakKata: {
 }[] = [];
 let Gremote: {
 	[name: string]: string;
-};
+} = {};
 // const uri = "your-mongodb-connection-string";
 const url = process.env.MONGODB_URL || "";
 async function connectToDatabase() {
