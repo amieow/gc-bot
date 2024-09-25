@@ -27,6 +27,12 @@ let dbTebakKata: {
 	soal: string;
 	jawaban: string;
 }[] = [];
+let dbTebakGambar: {
+	lvl: number;
+	jwb: string;
+	img: string;
+	clue: string;
+}[] = [];
 let Gremote: {
 	[name: string]: string;
 } = {};
@@ -36,29 +42,36 @@ async function connectToDatabase() {
 	try {
 		await mongoose.connect(url, {});
 		console.log("Connected to MongoDB");
-		for (let i = 0; i < 300; i++) {
-			const f = await fetch(
-				"https://skizo.tech/api/game/tebakgambar?apikey=Gorengan",
-			);
-			if (!f.ok) {
-				console.log("Error fetching to api");
-				return;
-			}
-			const json = (await f.json()) as {
-				lvl: number;
-				jwb: string;
-				img: string;
-				clue: string;
-			};
-			await TebakGambar.create({
-				lvl: json.lvl,
-				jwb: json.jwb,
-				img: json.img,
-				clue: json.clue,
-			});
-			await delay(1000);
-			console.log(`Inserted TebakGambar ${i + 1}x into the database`);
-		}
+		// for (let i = 0; i < 300; i++) {
+		// 	const f = await fetch(
+		// 		"https://skizo.tech/api/game/tebakgambar?apikey=",
+		// 	);
+		// 	if (!f.ok) {
+		// 		console.log("Error fetching to api");
+		// 		return;
+		// 	}
+		// 	const json = (await f.json()) as {
+		// 		lvl: number;
+		// 		jwb: string;
+		// 		img: string;
+		// 		clue: string;
+		// 	};
+		// 	await TebakGambar.create({
+		// 		lvl: json.lvl,
+		// 		jwb: json.jwb,
+		// 		img: json.img,
+		// 		clue: json.clue,
+		// 	});
+		// 	await delay(1000);
+		// 	console.log(`Inserted TebakGambar ${i + 1}x into the database`);
+		// }
+		const b = await TebakGambar.find();
+		dbTebakGambar = b.map((v) => ({
+			lvl: v.lvl,
+			jwb: v.jwb,
+			img: v.img,
+			clue: v.clue,
+		}));
 		const a = await TebakKata.find();
 		dbTebakKata = a.map((v) => ({
 			index: v.index,
