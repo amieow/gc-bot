@@ -140,7 +140,7 @@ bot.on("message", async (message: Message) => {
 		from.role = "bendahara";
 	}
 	if (isMods) {
-		from.role = "mod";
+		from.role = "mods";
 	}
 	if (from.group && Gremote.hasOwnProperty(from.group)) {
 		from.isGremote = true;
