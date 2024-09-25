@@ -56,6 +56,7 @@ async function connectToDatabase() {
 				img: json.img,
 				clue: json.clue,
 			});
+			await delay(1000);
 			console.log(`Inserted TebakGambar ${i + 1}x into the database`);
 		}
 		const a = await TebakKata.find();
