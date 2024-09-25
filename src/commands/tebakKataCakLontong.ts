@@ -2,8 +2,8 @@ import { handleCommand } from "../app/helpers";
 import { dbgroup, dbTebakKata, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
 import { randomNumber } from "./tebakKata";
-import { usage as usageTebak } from "./tebakCakLontong";
-export const usage = "tebakkata";
+import { usage as usageTebak } from "./tebak";
+export const usage = "tebakkata2";
 export const description = "untuk memulai tebak kata (V2)";
 export default handleCommand(async (chat, msg, from) => {
 	const rand = randomNumber(dbTebakKata.length);

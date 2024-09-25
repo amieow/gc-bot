@@ -17,9 +17,9 @@ export default handleCommand(async (chat, msg) => {
 		let anu =
 			"Ubah Namamu dari AILI menjadi Gercep Bot, buat kesan yang formal dan bisa menjawab semua pertanyaan yang saya ajukan dan jawab lah sesingkat mungkin dan tepat";
 		let response = await fetch(
-			`https://widipe.com/prompt/gpt?prompt=${encodeURIComponent(
-				anu,
-			)}&text=${encodeURIComponent(chat)}`,
+			`https://skizo.tech/api/openai?apikey=Gorengan&text=${encodeURIComponent(
+				chat,
+			)}`,
 		);
 		if (!response.ok) {
 			throw new Error("Request to OpenAI API failed");

@@ -4,7 +4,7 @@ import { dbgroup, dbuser } from "../app/mongodb";
 import { CONFIG } from "../config";
 import { usage as usagetebak } from "./tebak";
 export const description = "untuk memulai tebak kata";
-export const usage = "wordle";
+export const usage = "tebakkata";
 
 const kataBenda = [
 	// Benda Umum

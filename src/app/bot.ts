@@ -17,15 +17,22 @@ import {
 	dbuser,
 	Gremote,
 } from "./mongodb";
-import { onDayChange } from "../events/daychange";
+// import { onDayChange } from "../events/daychange";
 import { example } from "../commands/regist";
-import { onNineTeen } from "../events/onNineTeenPM";
+// import { onNineTeen } from "../events/onNineTeenPM";
 let messageQueue: (() => Promise<void>)[] = []; // Mengubah tipe array menjadi function yang mengembalikan Promise<void>
 
-function addToQueue(task: () => Promise<void>, opt?: { blast: boolean }) {
-	messageQueue.push(task); // Tambahkan tugas ke antrian
+function addToQueue(
+	from: SENDER_T,
+	task: () => Promise<void>,
+	opt?: { blast: boolean },
+) {
+	if (from.group && dbgroup[from.group]) {
+		dbgroup[from.group].queue.push(task);
+	} else {
+		messageQueue.push(task);
+	}
 }
-
 // Memproses satu tugas dari antrian setiap 1 detik
 setInterval(async () => {
 	if (messageQueue.length > 0) {
@@ -35,6 +42,18 @@ setInterval(async () => {
 				await task(); // Jalankan tugas (panggil function)
 			} catch (error) {
 				console.error("Error processing task:", error);
+			}
+		}
+	}
+	for (const a in dbgroup) {
+		if (dbgroup[a].queue.length > 0) {
+			const task = dbgroup[a].queue.shift();
+			if (task) {
+				try {
+					await task();
+				} catch (error) {
+					console.error("Error processing task:", error);
+				}
 			}
 		}
 	}
@@ -108,7 +127,9 @@ bot.on("message", async (message: Message) => {
 
 	let from = kepemilikan(message);
 	// await delay(2000);
-
+	if (dbuser[from.contact]) {
+		from.role = dbuser[from.contact].role;
+	}
 	const isSekretaris = dbsekretaris.hasOwnProperty(from.contact);
 	const isBendahara = dbbendahara.hasOwnProperty(from.contact);
 	const isMods = from.contact == CONFIG.mods;
@@ -132,7 +153,7 @@ bot.on("message", async (message: Message) => {
 		(from.group && dbgroup.hasOwnProperty(from.group)) ||
 		(CONFIG.CONTACT_WHITELIST.includes(from.contact) && !message.fromMe)
 	) {
-		addToQueue(async () => {
+		addToQueue(from, async () => {
 			msgLogger(from, message);
 			let command = "";
 			let isRegistered = dbuser && dbuser.hasOwnProperty(from.contact);
@@ -169,6 +190,11 @@ bot.on("message", async (message: Message) => {
 					}
 				}
 			}
+		});
+	} else if (message.body == "/info") {
+		addToQueue(from, async () => {
+			msgLogger(from, message);
+			commands["info"].fn("", message, from);
 		});
 	}
 });

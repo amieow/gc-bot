@@ -10,16 +10,29 @@ export default handleCommand(async (chat, msg, from) => {
 		return;
 	}
 	const group = dbgroup[from.group];
+	if (!group) {
+		await msg.reply(`Remote : ${msg.id.remote}`);
+		return;
+	}
+	let mentions: string[] = [];
+	if (group.bendahara) {
+		mentions = [...group.bendahara];
+	}
+	if (group.sekretaris) {
+		mentions = [...mentions, ...group.sekretaris];
+	}
 	const txt = `*Group ${group.name}*
 ID : ${group.remote}
-Ketua : @${formatSerializedNumberToMention(group.ketua)}
-Bendahara : ${group.bendahara
-		.map((v) => formatSerializedNumberToMention(v))
-		.join(" ")}
-Sekretaris : ${group.sekretaris
-		.map((v) => formatSerializedNumberToMention(v))
-		.join(" ")}`;
+Ketua : @${group.ketua && formatSerializedNumberToMention(group.ketua)}
+Bendahara : ${
+		group.bendahara &&
+		group.bendahara.map((v) => formatSerializedNumberToMention(v)).join(" ")
+	}
+Sekretaris : ${
+		group.sekretaris &&
+		group.sekretaris.map((v) => formatSerializedNumberToMention(v)).join(" ")
+	}`;
 	await msg.reply(txt, undefined, {
-		mentions: [...group.bendahara, ...group.sekretaris],
+		mentions,
 	});
 });

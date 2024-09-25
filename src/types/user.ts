@@ -6,8 +6,9 @@ export type T_User = {
 	kelas?: string;
 	catchReply?: string;
 	poin?: number;
-	afk? : {
+	afk?: {
 		time: number;
-    reason: string;
-	}
+		reason: string;
+	};
+	role?: string;
 } & games;

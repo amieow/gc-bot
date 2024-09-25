@@ -5,13 +5,16 @@ import { handleCommand } from "../app/helpers";
 export const description = "menu kelas";
 export const usage = "menu";
 // export const example = "";
-export default handleCommand(async (chat, msg) => {
+export default handleCommand(async (chat, msg, from) => {
 	let commandlist = "";
 	for (const map in commands) {
 		if (commands[map].tags?.includes("hidden")) continue;
 		commandlist += `\n*${CONFIG.prefix}${commands[map].usage}*\n> ${commands[map].description}`;
 	}
 	commandlist.trim();
-	await msg.reply(`------ *MENU GERCEPBOT* -------
-${commandlist}`);
+	await bot.sendMessage(
+		msg.id.remote,
+		`------ MENU GERCEP BOT ------
+${commandlist}`,
+	);
 });

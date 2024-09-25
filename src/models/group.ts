@@ -16,20 +16,20 @@ const groupSchema = new Schema({
 	},
 	name: { type: String, required: true },
 	remote: { type: String, required: true },
-	bendahara: [{ type: String, required: true }],
-	sekretaris: [{ type: String, required: true }],
-	ketua: { type: String, required: true },
-	Gremote : {type:String,required : false}
+	bendahara: [{ type: String, required: false }],
+	sekretaris: [{ type: String, required: false }],
+	ketua: { type: String, required: false },
+	Gremote: { type: String, required: false },
 });
 
 interface IGroup extends Document {
 	jadwal: T_JADWAL;
 	name: string;
 	remote: string;
-	bendahara: string[];
-	sekretaris: string[];
-	ketua: string;
-	Gremote?:string
+	bendahara?: string[];
+	sekretaris?: string[];
+	ketua?: string;
+	Gremote?: string;
 }
 
 const Group = mongoose.model<IGroup>("Group", groupSchema);

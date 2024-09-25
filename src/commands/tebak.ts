@@ -9,9 +9,10 @@ import Gamepoin from "../models/game";
 import User from "../models/user";
 import SENDER_T from "../types/sender";
 import tebakKata from "./tebakKata";
+import tebakKataCakLontong from "./tebakKataCakLontong";
 export const example = `${CONFIG.prefix}tebak pisang`;
 export const tags = ["hidden"];
-export const usage = `tb <kata>`;
+export const usage = `tebak <kata>`;
 export const description = "no";
 
 export async function addPoinToClient(from: SENDER_T, inc: number) {
@@ -59,43 +60,54 @@ export default handleCommand(async (chat, msg, from) => {
 	if (from.group) {
 		// if (!dbgroup[from.group].anskata) return;
 		const jawab = dbgroup[from.group].anskata;
-		if (jawab) {
-			if (chat == jawab) {
-				dbgroup[from.group].anskata = undefined;
+		const jawabv2 = dbgroup[from.group].anskatav2;
+		if (jawab || jawabv2) {
+			if (chat == jawab || chat == jawabv2) {
 				await addPoinToClient(from, 10);
 				await msg.reply(
-					`*Tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
-						from.contact,
-					)}`,
+					`*${
+						jawab ? "Kata" : "Tebakan"
+					} benar*\n+10 poin ${formatSerializedNumberToMention(from.contact)}`,
 					undefined,
 					{
 						mentions: [from.contact],
 					},
 				);
 				if ((dbgroup[from.group].playestime as number) <= 5) {
-					await delay(2000);
-					tebakKata(chat, msg, from);
+					await delay(1000);
+					dbgroup[from.group].playestime =
+						((dbgroup[from.group].playestime as number) || 0) + 1;
+					if (jawab) {
+						tebakKata("", msg, from);
+					} else {
+						tebakKataCakLontong(chat, msg, from);
+					}
 				} else {
 					dbgroup[from.group].playestime = 0;
 				}
 				return;
 			}
-			let klue = "";
-			for (let i = 0; i < jawab.length; i++) {
-				if (i + 1 < chat.length && chat[i] == jawab[i]) {
-					klue += "🟩";
-				} else {
-					klue += "🟥";
+			if (jawab) {
+				let klue = "";
+				for (let i = 0; i < jawab.length; i++) {
+					if (i + 1 < chat.length && chat[i] == jawab[i]) {
+						klue += "🟩";
+					} else {
+						klue += "🟥";
+					}
 				}
+				await msg.reply(klue);
+			} else {
+				await msg.react("🟥");
 			}
-			await msg.reply(klue);
 		}
 		return;
 	}
 	const jawab = dbuser[from.contact].anskata;
-	if (jawab) {
-		if (chat == jawab) {
-			dbuser[from.contact].anskata = undefined;
+	const jawabv2 = dbuser[from.contact].anskatav2;
+	if (jawab || jawabv2) {
+		if (chat == jawab || chat == jawabv2) {
+			// dbuser[from.contact].anskata = undefined;
 			await addPoinToClient(from, 10);
 			await msg.reply(
 				`*tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
@@ -107,20 +119,32 @@ export default handleCommand(async (chat, msg, from) => {
 				},
 			);
 			if ((dbuser[from.contact].playestime as number) < 5) {
-				tebakKata(chat, msg, from);
+				dbuser[from.contact].playestime =
+					((dbuser[from.contact].playestime as number) || 0) + 1;
+				if (jawab) {
+					dbuser[from.contact].anskata = undefined;
+					tebakKata(chat, msg, from);
+				} else {
+					dbuser[from.contact].anskatav2 = undefined;
+					tebakKataCakLontong(chat, msg, from);
+				}
 			} else {
 				dbuser[from.contact].playestime = 0;
 			}
 		} else {
-			let klue = "";
-			for (let i = 0; i < jawab.length; i++) {
-				if (i + 1 < chat.length && chat[i] == jawab[i]) {
-					klue += "🟩";
-				} else {
-					klue += "🟥";
+			if (jawab) {
+				let klue = "";
+				for (let i = 0; i < jawab.length; i++) {
+					if (i + 1 < chat.length && chat[i] == jawab[i]) {
+						klue += "🟩";
+					} else {
+						klue += "🟥";
+					}
 				}
+				await msg.reply(klue);
+			} else {
+				await msg.react("🟥");
 			}
-			await msg.reply(klue);
 		}
 	}
 });
