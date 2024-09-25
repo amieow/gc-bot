@@ -1,4 +1,5 @@
 import { handleCommand } from "../app/helpers";
+import { dbgroup } from "../app/mongodb";
 import Group from "../models/group";
 
 export const usage = "set.group <variable> <new_value>";
@@ -11,7 +12,7 @@ export default handleCommand(async (chat, msg, from) => {
 	}
 	if (!(from.role == "mods" || from.role == "admin")) {
 		await msg.reply(
-			"Only Mods and admins are allowed to change variable in this group",
+			"Only Mods or admin are allowed to change variable in this group",
 		);
 		return;
 	}
@@ -23,6 +24,7 @@ export default handleCommand(async (chat, msg, from) => {
 	switch (variable) {
 		case "ketua":
 			await Group.updateOne({ remote: from.group }, { $set: { ketua: value } });
+			dbgroup[from.group].ketua = value;
 			await msg.reply(
 				`Ketua group ${from.group} telah diubah menjadi ${value}`,
 			);
@@ -32,6 +34,11 @@ export default handleCommand(async (chat, msg, from) => {
 				{ remote: from.group },
 				{ $push: { sekretaris: value } },
 			);
+			if (dbgroup[from.group].sekretaris) {
+				dbgroup[from.group].sekretaris?.push(value);
+			} else {
+				dbgroup[from.group].sekretaris = [value];
+			}
 			await msg.reply(
 				`Sekretaris group ${from.group} telah ditambahkan menjadi ${value}`,
 			);
@@ -41,6 +48,11 @@ export default handleCommand(async (chat, msg, from) => {
 				{ remote: from.group },
 				{ $push: { bendahara: value } },
 			);
+			if (dbgroup[from.group].bendahara) {
+				dbgroup[from.group].bendahara?.push(value);
+			} else {
+				dbgroup[from.group].bendahara = [value];
+			}
 			await msg.reply(
 				`Bendahara group ${from.group} telah ditambahkan menjadi ${value}`,
 			);

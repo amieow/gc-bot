@@ -1,11 +1,11 @@
 import { handleCommand, loading } from "../app/helpers";
+import { dbgroup } from "../app/mongodb";
 import Group from "../models/group";
 
 export const usage = "add.group <remote> <name>";
 export const description = "add group into database";
 export const tags = ["hidden"];
 export default handleCommand(async (chat, msg, from) => {
-	console.log(from);
 	if (!(from.role == "mods")) {
 		await msg.reply("Only mods can add group");
 		return;
@@ -20,6 +20,11 @@ export default handleCommand(async (chat, msg, from) => {
 			remote,
 			name,
 		});
+		dbgroup[remote] = {
+			queue: [],
+			name: name,
+			remote: remote,
+		};
 		await msg.reply(`Group ${name} with ID ${remote} berhasil ditambahkan`);
 	});
 });
