@@ -163,7 +163,7 @@ bot.on("message", async (message: Message) => {
 				command = dbuser[from.contact].catchReply || "";
 			}
 			const msgContent = message.body.trim();
-			if (msgContent.startsWith(CONFIG.prefix)) {
+			if (message.type === "chat" && msgContent.startsWith(CONFIG.prefix)) {
 				const [commandName, ...args] = msgContent.slice(1).split(" ");
 				// console.log(commandName);
 				if (!isRegistered && commandName != "regist") {
@@ -177,8 +177,11 @@ bot.on("message", async (message: Message) => {
 					!commands[commandName].tags?.includes("closed")
 				) {
 					commands[commandName].fn(args.join(" "), message, from);
-				} else if (!from.group) {
-					await message.reply("Command tidak dikenali");
+				} else {
+					const matchs = similarity.findBestMatch(commandName, allCommands);
+					await message.reply(
+						`*command tidak dikenali*\napakah maksud mu ini?\n*${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
+					);
 				}
 			} else if (command) {
 				if (message.hasQuotedMsg) {
@@ -188,11 +191,6 @@ bot.on("message", async (message: Message) => {
 						const [commandName, ...args] = msgContent.slice(1).split(" ");
 						if (commands.hasOwnProperty(commandName)) {
 							commands[command].fn(args.join(" "), message, from);
-						} else {
-							const matchs = similarity.findBestMatch(commandName, allCommands);
-							await message.reply(
-								`*command tidak dikenali*\napakah maksud mu ini?\n*${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
-							);
 						}
 					}
 				}
