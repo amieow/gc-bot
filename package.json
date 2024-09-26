@@ -21,6 +21,7 @@
 		"qrcode": "^1.5.4",
 		"short-uuid": "^5.2.0",
 		"socket.io": "^4.7.5",
+		"string-similarity": "^4.0.4",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.5.4",
 		"whatsapp-web.js": "^1.25.0"
@@ -39,6 +40,7 @@
 		"@types/ping": "^0.4.4",
 		"@types/qrcode": "^1.5.5",
 		"@types/socket.io": "^3.0.2",
+		"@types/string-similarity": "^4.0.2",
 		"nodemon": "^3.1.4"
 	}
 }

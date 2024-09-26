@@ -32,9 +32,3 @@ To use this package, follow these steps:
    npm run dev
    ```
    This command will run the `src/index.ts` file using **nodemon**.
-
-## Contributors
-
-Thanks to the following people who have contributed to this project:
-
-- [@izzaalfiansyah](https://github.com/izzaalfiansyah) 📖

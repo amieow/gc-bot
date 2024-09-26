@@ -9,7 +9,7 @@ export default handleCommand(async (chat, msg, from) => {
 	let commandlist = "";
 	for (const map in commands) {
 		if (commands[map].tags?.includes("hidden")) continue;
-		commandlist += `\n*${CONFIG.prefix}${commands[map].usage}*\n> ${commands[map].description}`;
+		commandlist += `\n- *${CONFIG.prefix}${commands[map].usage}*`;
 	}
 	commandlist.trim();
 	await bot.sendMessage(

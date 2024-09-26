@@ -8,6 +8,7 @@ import onDisconnected from "../events/disconnected";
 import { CONFIG } from "../config";
 import { delay, msgLogger } from "./helpers";
 import SENDER_T from "../types/sender";
+import similarity from "string-similarity";
 import {
 	closeConnection,
 	connectToDatabase,
@@ -120,6 +121,7 @@ function kepemilikan(message: Message): SENDER_T {
 		contact: message.id.remote,
 	};
 }
+const allCommands = Object.keys(commands);
 // console.log("command list : ", commands);
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
@@ -175,7 +177,7 @@ bot.on("message", async (message: Message) => {
 					!commands[commandName].tags?.includes("closed")
 				) {
 					commands[commandName].fn(args.join(" "), message, from);
-				} else if (!from.group || from.isGremote) {
+				} else if (!from.group) {
 					await message.reply("Command tidak dikenali");
 				}
 			} else if (command) {
@@ -186,6 +188,11 @@ bot.on("message", async (message: Message) => {
 						const [commandName, ...args] = msgContent.slice(1).split(" ");
 						if (commands.hasOwnProperty(commandName)) {
 							commands[command].fn(args.join(" "), message, from);
+						} else {
+							const matchs = similarity.findBestMatch(commandName, allCommands);
+							await message.reply(
+								`*command tidak dikenali*\napakah maksud mu ini?\n*${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
+							);
 						}
 					}
 				}
