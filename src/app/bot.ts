@@ -8,7 +8,7 @@ import onDisconnected from "../events/disconnected";
 import { CONFIG } from "../config";
 import { delay, msgLogger } from "./helpers";
 import SENDER_T from "../types/sender";
-import similarity from "string-similarity";
+import { findBestMatch } from "string-similarity";
 import {
 	closeConnection,
 	connectToDatabase,
@@ -178,9 +178,10 @@ bot.on("message", async (message: Message) => {
 				) {
 					commands[commandName].fn(args.join(" "), message, from);
 				} else {
-					const matchs = similarity.findBestMatch(commandName, allCommands);
+					const matchs = findBestMatch(commandName, allCommands);
+					console.log(matchs.bestMatch);
 					await message.reply(
-						`*command tidak dikenali*\napakah maksud mu ini?\n*${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
+						`*command tidak dikenali*\napakah maksud mu ini? *${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
 					);
 				}
 			} else if (command) {
