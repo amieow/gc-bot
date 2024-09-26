@@ -92,15 +92,14 @@ const commands: {
 		tags?: string[];
 	};
 } = {};
-// console.log("commands");
 commandFiles.forEach(async (file) => {
 	const commandModule = await import(path.join(commandsFolder, file)); // Dynamic import
-	const commandName: string = commandModule.usage; // Ambil usage sebagai nama command
+	const commandName: string = commandModule.usage.split(" ")[0]; // Ambil usage sebagai nama command
 	const fn = commandModule.default;
 	const tags = commandModule.tags || undefined;
 	// console.log(commandName);
 	if (commandName) {
-		commands[commandName.split(" ")[0]] = {
+		commands[commandName] = {
 			fn,
 			description: commandModule.description,
 			usage: commandName,
@@ -121,12 +120,16 @@ function kepemilikan(message: Message): SENDER_T {
 		contact: message.id.remote,
 	};
 }
-const allCommands = Object.keys(commands);
+let allCommands: string[] = [];
+export { allCommands };
 // console.log("command list : ", commands);
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
 	// const splt = message.id.remote.split("-");
-
+	if (allCommands.length == 0) {
+		allCommands = Object.keys(commands);
+		console.log(allCommands);
+	}
 	let from = kepemilikan(message);
 	// await delay(2000);
 	if (dbuser[from.contact]) {
@@ -181,7 +184,9 @@ bot.on("message", async (message: Message) => {
 					const matchs = findBestMatch(commandName, allCommands);
 					console.log(matchs.bestMatch);
 					await message.reply(
-						`*command tidak dikenali*\napakah maksud mu ini? *${CONFIG.prefix}${matchs.bestMatch.target}*\nKemiripan : ${matchs.bestMatch.rating}`,
+						`*command tidak dikenali*\napakah maksud mu ini? *${CONFIG.prefix}${
+							matchs.bestMatch.target
+						}*\nKemiripan : ${matchs.bestMatch.rating * 100}%`,
 					);
 				}
 			} else if (command) {
