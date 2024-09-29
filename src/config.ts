@@ -17,7 +17,7 @@ let CONFIG = {
 	// sekretaris: ["6281575597422@c.us"],
 
 	// Daftar nomor kontak individu yang diizinkan menggunakan bot ini (hanya kontak yang ada di daftar ini yang bisa mengakses bot).
-	CONTACT_WHITELIST: ["6285179772608@c.us", "6281575597422@c.us"],
+	CONTACT_WHITELIST: ["6285179772608@c.us", "6285870650187@c.us"],
 
 	// URL untuk koneksi ke database MongoDB yang digunakan oleh bot ini.
 	MONGODB_URL:
