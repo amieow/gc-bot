@@ -16,11 +16,13 @@ export default handleCommand(async (chat, msg, from) => {
 		);
 		return;
 	}
-	const [variable, value] = chat.trim().split(" ");
+	let [value, variable] = chat.trim().split(" ");
+
 	if (!variable || !value) {
 		await msg.reply("Invalid data\n");
 		return;
 	}
+	value = value.slice(1) + "@c.us";
 	switch (variable) {
 		case "ketua":
 			await Group.updateOne({ remote: from.group }, { $set: { ketua: value } });

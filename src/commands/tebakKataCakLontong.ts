@@ -9,9 +9,17 @@ export default handleCommand(async (chat, msg, from) => {
 	const rand = randomNumber(dbTebakKata.length);
 	const { soal, jawaban } = dbTebakKata[rand];
 	if (from.group) {
-		dbgroup[from.group].anskatav2 = jawaban;
+		dbgroup[from.group] = {
+			...dbgroup[from.group],
+			anskata: jawaban,
+			playestime: (dbgroup[from.group].playestime || 0) + 1,
+		};
 	} else {
-		dbuser[from.contact].anskatav2 = jawaban;
+		dbuser[from.contact] = {
+			...dbuser[from.contact],
+			anskata: jawaban,
+			playestime: (dbuser[from.contact].playestime || 0) + 1,
+		};
 	}
 	console.log("Jawbaan dari tebakkata v2 ", jawaban);
 	await msg.reply(`
