@@ -60,9 +60,9 @@ export default handleCommand(async (chat, msg, from) => {
 	if (from.group) {
 		// if (!dbgroup[from.group].anskata) return;
 		const jawab = dbgroup[from.group].anskata;
-		const jawabv2 = dbgroup[from.group].anskatav2;
-		if (jawab || jawabv2) {
-			if (chat == jawab || chat == jawabv2) {
+		const isV2 = dbgroup[from.group].isanskatav2;
+		if (jawab) {
+			if (chat == jawab) {
 				await addPoinToClient(from, 10);
 				await msg.reply(
 					`*${
@@ -75,19 +75,19 @@ export default handleCommand(async (chat, msg, from) => {
 				);
 				if ((dbgroup[from.group].playestime as number) <= 5) {
 					await delay(1000);
-					dbgroup[from.group].playestime =
-						((dbgroup[from.group].playestime as number) || 0) + 1;
-					if (jawab) {
-						tebakKata("", msg, from);
+					if (isV2) {
+						tebakKataCakLontong("", msg, from);
 					} else {
-						tebakKataCakLontong(chat, msg, from);
+						tebakKata("", msg, from);
 					}
 				} else {
 					dbgroup[from.group].playestime = 0;
 				}
 				return;
 			}
-			if (jawab) {
+			if (isV2) {
+				await msg.react("🟥");
+			} else {
 				let klue = "";
 				for (let i = 0; i < jawab.length; i++) {
 					if (i + 1 < chat.length && chat[i] == jawab[i]) {
@@ -97,54 +97,48 @@ export default handleCommand(async (chat, msg, from) => {
 					}
 				}
 				await msg.reply(klue);
-			} else {
-				await msg.react("🟥");
 			}
 		}
 		return;
 	}
 	const jawab = dbuser[from.contact].anskata;
-	const jawabv2 = dbuser[from.contact].anskatav2;
-	if (jawab || jawabv2) {
-		if (chat == jawab || chat == jawabv2) {
-			// dbuser[from.contact].anskata = undefined;
-			await addPoinToClient(from, 10);
-			await msg.reply(
-				`*tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
-					from.contact,
-				)}`,
-				undefined,
-				{
-					mentions: [from.contact],
-				},
-			);
-			if ((dbuser[from.contact].playestime as number) < 5) {
-				dbuser[from.contact].playestime =
-					((dbuser[from.contact].playestime as number) || 0) + 1;
-				if (jawab) {
-					dbuser[from.contact].anskata = undefined;
-					tebakKata(chat, msg, from);
-				} else {
-					dbuser[from.contact].anskatav2 = undefined;
-					tebakKataCakLontong(chat, msg, from);
-				}
+	const isV2 = dbuser[from.contact].isanskatav2;
+	if (!jawab) return;
+	if (chat == jawab) {
+		// dbuser[from.contact].anskata = undefined;
+		await addPoinToClient(from, 10);
+		await msg.reply(
+			`*tebakan benar*\n+10 poin ${formatSerializedNumberToMention(
+				from.contact,
+			)}`,
+			undefined,
+			{
+				mentions: [from.contact],
+			},
+		);
+		if ((dbuser[from.contact].playestime as number) < 5) {
+			dbuser[from.contact].anskata = undefined;
+			if (isV2) {
+				tebakKataCakLontong(chat, msg, from);
 			} else {
-				dbuser[from.contact].playestime = 0;
+				tebakKata(chat, msg, from);
 			}
 		} else {
-			if (jawab) {
-				let klue = "";
-				for (let i = 0; i < jawab.length; i++) {
-					if (i + 1 < chat.length && chat[i] == jawab[i]) {
-						klue += "🟩";
-					} else {
-						klue += "🟥";
-					}
-				}
-				await msg.reply(klue);
+			dbuser[from.contact].playestime = 0;
+		}
+		return;
+	}
+	if (isV2) {
+		await msg.react("🟥");
+	} else {
+		let klue = "";
+		for (let i = 0; i < jawab.length; i++) {
+			if (i + 1 < chat.length && chat[i] == jawab[i]) {
+				klue += "🟩";
 			} else {
-				await msg.react("🟥");
+				klue += "🟥";
 			}
 		}
+		await msg.reply(klue);
 	}
 });

@@ -349,12 +349,14 @@ export default handleCommand(async (chat, msg, from) => {
 		dbgroup[from.group] = {
 			...dbgroup[from.group],
 			anskata: kataterpilih,
+			isanskatav2: false,
 			playestime: (dbgroup[from.group].playestime || 0) + 1,
 		};
 	} else {
 		dbuser[from.contact] = {
 			...dbuser[from.contact],
 			anskata: kataterpilih,
+			isanskatav2: false,
 			playestime: (dbuser[from.contact].playestime || 0) + 1,
 		};
 	}

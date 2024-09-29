@@ -16,11 +16,11 @@ interface IGamePoin extends Document {
 }
 export type games = {
 	anskata?: string;
+	isanskatav2?: boolean;
 	ansmath?: {
 		ans: string;
 		poin: number;
 	};
-	anskatav2?: string;
 	ansGambar?: string;
 	playestime?: number;
 };
