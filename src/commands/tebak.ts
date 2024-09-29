@@ -59,6 +59,7 @@ export async function addPoinToClient(from: SENDER_T, inc: number) {
 export default handleCommand(async (chat, msg, from) => {
 	if (from.group) {
 		// if (!dbgroup[from.group].anskata) return;
+		chat = chat.toLowerCase();
 		const jawab = dbgroup[from.group].anskata;
 		const isV2 = dbgroup[from.group].isanskatav2;
 		if (jawab) {
