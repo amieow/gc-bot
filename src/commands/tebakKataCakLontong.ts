@@ -11,14 +11,14 @@ export default handleCommand(async (chat, msg, from) => {
 	if (from.group) {
 		dbgroup[from.group] = {
 			...dbgroup[from.group],
-			anskata: jawaban,
+			anskata: jawaban.toLowerCase(),
 			isanskatav2: true,
 			playestime: (dbgroup[from.group].playestime || 0) + 1,
 		};
 	} else {
 		dbuser[from.contact] = {
 			...dbuser[from.contact],
-			anskata: jawaban,
+			anskata: jawaban.toLowerCase(),
 			isanskatav2: true,
 			playestime: (dbuser[from.contact].playestime || 0) + 1,
 		};
