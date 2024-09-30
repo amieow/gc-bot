@@ -23,7 +23,7 @@ export default handleCommand(async (chat, msg, from) => {
 	}
 	const txt = `*Group ${group.name}*
 ID : ${group.remote}
-Ketua : @${group.ketua && formatSerializedNumberToMention(group.ketua)}
+Ketua : ${group.ketua && formatSerializedNumberToMention(group.ketua)}
 Bendahara : ${
 		group.bendahara &&
 		group.bendahara.map((v) => formatSerializedNumberToMention(v)).join(" ")
