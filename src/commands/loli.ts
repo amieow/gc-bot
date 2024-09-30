@@ -11,8 +11,8 @@ export default handleCommand(async (chat, msg, from) => {
 			await msg.reply("Error fetching loli");
 			return;
 		}
-		const json = await f.json();
-		console.log(json);
+		console.log(f);
+
 		const arrayBuffer = await f.arrayBuffer();
 		let buffer = Buffer.from(arrayBuffer);
 		const media = new MessageMedia(
