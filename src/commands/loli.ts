@@ -8,11 +8,8 @@ export default handleCommand(async (chat, msg, from) => {
 	await loading(msg, async () => {
 		const f = await fetch("https://skizo.tech/api/loli?apikey=Gorengan");
 		if (!f.ok) {
-			await msg.reply("Error fetching loli");
-			return;
+			throw new Error("Error fetching loli image");
 		}
-		console.log(f);
-
 		const arrayBuffer = await f.arrayBuffer();
 		let buffer = Buffer.from(arrayBuffer);
 		const media = new MessageMedia(
