@@ -15,8 +15,11 @@ export default handleCommand(async (chat, msg, from) => {
 		return;
 	}
 	let mentions: string[] = [];
+	if (group.ketua) {
+		mentions = [group.ketua];
+	}
 	if (group.bendahara) {
-		mentions = [...group.bendahara];
+		mentions = [...mentions, ...group.bendahara];
 	}
 	if (group.sekretaris) {
 		mentions = [...mentions, ...group.sekretaris];
