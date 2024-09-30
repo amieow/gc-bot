@@ -49,6 +49,7 @@ export const formatDate = (time: number): string => {
 };
 
 export async function loading(msg: Message, process: () => Promise<void>) {
+	let errorHandled = false; // Tambahkan flag untuk menghindari pengiriman ganda
 	try {
 		// Coba untuk bereaksi dengan emoji loading
 		await msg.react("🔄");
@@ -63,8 +64,11 @@ export async function loading(msg: Message, process: () => Promise<void>) {
 		try {
 			// Cek apakah pesan masih ada sebelum menambahkan reaksi gagal
 			await msg.react("❌");
+
+			// Kirim pesan error hanya jika error adalah instance dari Error
 			if (error instanceof Error) {
 				await msg.reply(error.message);
+				errorHandled = true; // Tandai bahwa pesan sudah dikirim
 			}
 		} catch (err) {
 			console.log(
@@ -72,8 +76,8 @@ export async function loading(msg: Message, process: () => Promise<void>) {
 			);
 		}
 
-		// Jika error adalah instance dari Error, kirim pesan error jika bisa
-		if (error instanceof Error) {
+		// Kirim pesan error hanya jika belum dikirim di blok `try` sebelumnya
+		if (error instanceof Error && !errorHandled) {
 			try {
 				await msg.reply(error.message);
 			} catch (err) {
