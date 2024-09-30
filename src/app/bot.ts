@@ -84,7 +84,7 @@ const commandFiles = fs
 
 // Memuat semua command
 console.log(commandFiles);
-const commands: {
+let commands: {
 	[key: string]: {
 		fn: (command: string, message: Message, from: SENDER_T) => void;
 		description: string;
@@ -107,7 +107,6 @@ commandFiles.forEach(async (file) => {
 		};
 	}
 });
-
 function kepemilikan(message: Message): SENDER_T {
 	const a = (message.id as any).participant;
 	if (a) {
@@ -120,16 +119,9 @@ function kepemilikan(message: Message): SENDER_T {
 		contact: message.id.remote,
 	};
 }
-let allCommands: string[] = [];
-export { allCommands };
 // console.log("command list : ", commands);
 // CONFIG.bendahara.map((v) => v + "@c.us");
 bot.on("message", async (message: Message) => {
-	// const splt = message.id.remote.split("-");
-	if (allCommands.length == 0) {
-		allCommands = Object.keys(commands);
-		console.log(allCommands);
-	}
 	let from = kepemilikan(message);
 	// await delay(2000);
 	if (dbuser[from.contact]) {
@@ -181,7 +173,7 @@ bot.on("message", async (message: Message) => {
 				) {
 					commands[commandName].fn(args.join(" "), message, from);
 				} else {
-					const matchs = findBestMatch(commandName, allCommands);
+					const matchs = findBestMatch(commandName, Object.keys(commands));
 					console.log(matchs.bestMatch);
 					await message.reply(
 						`*command tidak dikenali*\napakah maksud mu ini? *${CONFIG.prefix}${
@@ -202,6 +194,7 @@ bot.on("message", async (message: Message) => {
 				}
 			}
 		});
+		return;
 	} else if (message.body == "/info") {
 		addToQueue(from, async () => {
 			msgLogger(from, message);
